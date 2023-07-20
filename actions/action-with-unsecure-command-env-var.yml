@@ -1,0 +1,9 @@
+name: ActionWithUnsecureCommandEnv
+on: [push, pull_request]
+jobs:
+  DangerousJob:
+    steps:
+      - name: "dangerous task"
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+        run: echo "..."

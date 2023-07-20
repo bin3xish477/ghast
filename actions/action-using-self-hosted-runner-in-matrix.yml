@@ -1,0 +1,14 @@
+name: My Workflow
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        runner: [self-hosted, github-hosted]
+    steps:
+      - name: "Task 1..."
+        run: "echo running Task 1..."

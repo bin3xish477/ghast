@@ -1,0 +1,9 @@
+name: ActionUsingSelfHostedGroupReference
+on: [push]
+jobs:
+  SomeJob:
+    runs-on:
+      group: ubunter-runners
+    steps:
+      - name: "Task 1..."
+        run: "echo running task 1..."

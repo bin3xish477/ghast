@@ -1,0 +1,15 @@
+name: WritePermissionsOneJob
+on: [push]
+jobs:
+  SomeJob:
+    permissions:
+      contents: read
+    steps:
+      - name: "task 1"
+        run: "echo running task 1"
+  AnotherJob:
+    permissions:
+      contents: write
+    steps:
+      - name: "task 2"
+        run: "echo running task 2"

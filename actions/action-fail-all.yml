@@ -1,0 +1,12 @@
+name: ActionFailAll
+on: [push, pull_request]
+permissions: write-all
+jobs:
+  SomeJob:
+    permissions:
+      contents: write
+    steps:
+      - name: "Task 1"
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+        run: ""

@@ -1,0 +1,9 @@
+name: WritePermissionsAllJobs
+on: [push]
+permissions:
+  contents: write
+jobs:
+  SomeJob:
+    steps:
+      - name: "Task 1"
+        run: "running task 1"

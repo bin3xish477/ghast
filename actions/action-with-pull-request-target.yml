@@ -1,0 +1,7 @@
+name: ActionWithPullRequestTarget
+on: [pull_request_target]
+jobs:
+  SomeJob:
+    steps:
+      - name: "Task 1..."
+        run: "echo running task 1..."

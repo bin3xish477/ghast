@@ -1,0 +1,12 @@
+name: ActionWithDangerousVariable
+on:
+  push:
+    branches:
+      - main
+jobs:
+  SomeJob:
+    steps:
+      - name: "Task 1..."
+        run: "${{ github.context.pull_request.title }}"
+      - name: "Task 2..."
+        run: "${{ github.event.head_commit.message }}"

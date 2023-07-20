@@ -1,0 +1,8 @@
+name: ActionUsingSelfHostedRunner
+on: [push]
+jobs:
+  SomeJob:
+    runs-on: [self-hosted-runner]
+    steps:
+      - name: "Task 1..."
+        run: "echo running task 1..."
