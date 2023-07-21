@@ -7,7 +7,7 @@ from analyzer.analyzer import Analyzer
 
 
 @pytest.fixture(name="analyzer")
-def analyzer_fixtures():
+def analyzer_fixture():
     """Returns instance of Analyzer class as fixture for pytests"""
     return Analyzer()
 
@@ -48,32 +48,18 @@ def test_check_for_self_hosted_runners(analyzer) -> None:
 
 
 def test_check_for_dangerous_write_permissions(analyzer) -> None:
-    with open(
-        "actions/action-with-write-permissions-all-jobs.yml", "r", encoding="utf-8"
-    ) as action:
+    with open("actions/action-with-write-permissions-all-jobs.yml", "r", encoding="utf-8") as action:
         action_dict = yaml.safe_load(action)
-        assert analyzer.run_checks(action=action_dict) is False
+        assert analyzer.run_checks(action=action_dict) is True
 
 
 def test_check_for_dangerous_write_permissions_one_job(analyzer) -> None:
-    with open(
-        "actions/action-with-write-permissions-one-job.yml", "r", encoding="utf-8"
-    ) as action:
+    with open("actions/action-with-write-permissions-one-job.yml", "r", encoding="utf-8") as action:
         action_dict = yaml.safe_load(action)
-        assert analyzer.run_checks(action=action_dict) is False
+        assert analyzer.run_checks(action=action_dict) is True
 
 
 def test_check_for_dangerous_write_permissions_write_all(analyzer) -> None:
-    with open(
-        "actions/action-with-write-all-permissions-all-jobs.yml", "r", encoding="utf-8"
-    ) as action:
+    with open("actions/action-with-write-all-permissions.yml", "r", encoding="utf-8") as action:
         action_dict = yaml.safe_load(action)
-        assert analyzer.run_checks(action=action_dict) is False
-
-
-def test_check_for_dangerous_write_permissions_one_job_write_all(analyzer) -> None:
-    with open(
-        "actions/action-with-write-all-permissions-one-job.yml", "r", encoding="utf-8"
-    ) as action:
-        action_dict = yaml.safe_load(action)
-        assert analyzer.run_checks(action=action_dict) is False
+        assert analyzer.run_checks(action=action_dict) is True

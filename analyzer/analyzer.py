@@ -57,7 +57,7 @@ class Analyzer:
                     if match(ACTION_WITH_VERSION_REGEX, uses):
                         if self.verbose:
                             print(
-                                f"INFO step using action('{uses}') with version number instead of a SHA hash"
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} step using action('{uses}') with version number instead of a SHA hash"
                             )
                         passed = False
                         break
@@ -71,7 +71,7 @@ class Analyzer:
                 if "run" in step:
                     if self.verbose:
                         print(
-                            f"INFO found inline script in job('{job}').step('{step['name']}')"
+                            f"{Colors.LIGHT_GRAY}INFO{Colors.END} found inline script in job('{job}').step('{step['name']}')"
                         )
                     passed = False
         return passed
@@ -88,7 +88,7 @@ class Analyzer:
                     if variable:
                         if self.verbose:
                             print(
-                                f"INFO dangerous variable('{variable.group()}') in inline script"
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} dangerous variable('{variable.group()}') in inline script"
                             )
                         passed = False
         return passed
@@ -101,7 +101,7 @@ class Analyzer:
                 if "env" in step and "ACTIONS_ALLOW_UNSECURE_COMMANDS" in step["env"]:
                     if self.verbose:
                         print(
-                            f"INFO step('{step['name']}') contains dangerous ACTIONS_ALLOW_UNSECURE_COMMANDS environment variable"
+                            f"{Colors.LIGHT_GRAY}INFO{Colors.END} step('{step['name']}') contains dangerous ACTIONS_ALLOW_UNSECURE_COMMANDS environment variable"
                         )
                     passed = False
                     return passed
@@ -129,7 +129,7 @@ class Analyzer:
                     if action:
                         if self.verbose:
                             print(
-                                f"INFO job('{job}') is using cache action('{action.group()}')"
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') is using cache action('{action.group()}')"
                             )
                         passed = False
         return passed
@@ -155,12 +155,14 @@ class Analyzer:
                 if permissions == "write-all":
                     passed = False
                     if self.verbose:
-                        print(f"INFO job('{job}') contains 'write-all' permissions")
+                        print(
+                            f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') contains 'write-all' permissions"
+                        )
                 for scope in dangerous_scopes:
                     if scope in permissions and permissions[scope] == "write":
                         if self.verbose:
                             print(
-                                f"INFO write permissions set for dangerous scope('{scope}')"
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} write permissions set for dangerous scope('{scope}')"
                             )
                         passed = False
                         return passed
@@ -231,10 +233,10 @@ class Analyzer:
                         if any(input in non_oidc_inputs for input in step["with"]):
                             if self.verbose:
                                 print(
-                                    f"INFO found step('{step['name']}') not using OIDC with `configure-aws-credentials`"
+                                    f"{Colors.LIGHT_GRAY}INFO{Colors.END} found step('{step['name']}') not using OIDC with `configure-aws-credentials`"
                                 )
-                        passed = False
-                        return passed
+                        if passed:
+                            passed = False
         return passed
 
     def get_checks(self) -> list:
@@ -260,16 +262,16 @@ class Analyzer:
         self.jobs = self.action["jobs"]
 
         passed_all_checks = True
-        FAIL_checks = []
+        fail_checks = []
         if self._action_has_required_elements():
             for check in self.checks.keys():
                 if self.ignore_warnings:
                     if self.checks[check]["level"] == "WARN":
                         continue
                 if not Analyzer.__dict__[check](self):
-                    FAIL_checks.append(check)
+                    fail_checks.append(check)
                     if passed_all_checks:
                         passed_all_checks = False
-            for check in FAIL_checks:
+            for check in fail_checks:
                 self._print_failed_check_msg(check, self.checks[check]["level"])
         return passed_all_checks
