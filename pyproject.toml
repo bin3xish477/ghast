@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "asa"
+name = "actions-security-analyzer"
 dynamic = ["version"]
 description = 'Analyze the security posture of one or more GitHub Actions'
 readme = "README.md"
