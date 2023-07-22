@@ -21,7 +21,7 @@ class Analyzer:
             "_check_for_pull_request_target": {"level": "FAIL"},
             "_check_for_script_injection": {"level": "FAIL"},
             "_check_for_self_hosted_runners": {"level": "WARN"},
-            "_check_for_aws_configure_credentials_non_oidc": {"level": "FAIL"},
+            "_check_for_aws_configure_credentials_non_oidc": {"level": "WARN"},
         }
         self.action = {}
 
@@ -155,9 +155,7 @@ class Analyzer:
                 if permissions == "write-all":
                     passed = False
                     if self.verbose:
-                        print(
-                            f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') contains 'write-all' permissions"
-                        )
+                        print(f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') contains 'write-all' permissions")
                 for scope in dangerous_scopes:
                     if scope in permissions and permissions[scope] == "write":
                         if self.verbose:
@@ -191,9 +189,7 @@ class Analyzer:
                 matrix = self.jobs[job]["strategy"]["matrix"]
                 if "runner" in matrix:
                     if type(matrix["runner"]) == list:
-                        if any(
-                            runner not in default_runners for runner in matrix["runner"]
-                        ):
+                        if any(runner not in default_runners for runner in matrix["runner"]):
                             passed = False
                             break
             if "runs-on" in self.jobs[job]:
@@ -219,7 +215,9 @@ class Analyzer:
         # if these are specifed in the configure-aws-credentials action
         # then the action will not use GitHub's OIDC provider
         # see this: https://github.com/aws-actions/configure-aws-credentials#assuming-a-role
-        CONFIGURE_AWS_CREDS_ACTION_REGEX = r"aws\-actions\/configure\-aws\-credentials@(v\d+(\.\d+)?(\.\d+)?|[a-f0-9]{40})"
+        CONFIGURE_AWS_CREDS_ACTION_REGEX = (
+            r"aws\-actions\/configure\-aws\-credentials@(v\d+(\.\d+)?(\.\d+)?|[a-f0-9]{40})"
+        )
         non_oidc_inputs = [
             "aws-access-key-id",
             "web-identity-token-file",
