@@ -5,7 +5,7 @@ asa (actions-security-analzyer) is a tool to analyze the security posture of you
 
 ### Installation
 
-> [!IMPORTANT] Make sure you have `~/.local/bin` in your PATH
+> Make sure you have `~/.local/bin` in your PATH
 
 ```
 pip3 install actions-security-analzyer
