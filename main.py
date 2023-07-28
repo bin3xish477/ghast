@@ -44,6 +44,7 @@ def _parse_args():
         action="store_true",
         help="ignore checks labeled as warning",
     )
+    parser.add_argument("--no-summary", "-n", action="store_true", help="don't show tool summary section")
     return parser.parse_args()
 
 
@@ -56,6 +57,7 @@ def _main():
     list_checks = args.list_checks
     verbose = args.verbose
     ignore_warnings = args.ignore_warnings
+    no_summary = args.no_summary
 
     analyzer = Analyzer(ignore_warnings=ignore_warnings, verbose=verbose)
 
@@ -107,18 +109,19 @@ def _main():
         errored = True
         print(f"[{Colors.RED}ERROR{Colors.END}] {exception}")
     finally:
-        if not errored and not list_checks:
-            if failed_actions:
-                print(
-                    f"{Colors.PURPLE}{Colors.UNDERLINE}Summary{Colors.END}"
-                    "\nThe following Actions failed to pass one or more checks:"
-                )
-                for action in failed_actions:
-                    print(f" \u2022 {Colors.BOLD}{action}{Colors.END}")
-                exit(FAILED)
-            else:
-                print(f"{Colors.PURPLE}Summary{Colors.END}: Passed all checks \U0001F44D")
-                exit(SUCCESS)
+        if not no_summary:
+            if not errored and not list_checks:
+                if failed_actions:
+                    print(
+                        f"{Colors.PURPLE}{Colors.UNDERLINE}Summary{Colors.END}"
+                        "\nThe following Actions failed to pass one or more checks:"
+                    )
+                    for action in failed_actions:
+                        print(f" \u2022 {Colors.BOLD}{action}{Colors.END}")
+                    exit(FAILED)
+                else:
+                    print(f"{Colors.PURPLE}Summary{Colors.END}: Passed all checks \U0001F44D")
+                    exit(SUCCESS)
 
 
 if __name__ == "__main__":
