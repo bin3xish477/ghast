@@ -28,7 +28,7 @@ class Analyzer:
             "_check_for_script_injection": {"level": "FAIL"},
             "_check_for_self_hosted_runners": {"level": "WARN"},
             "_check_for_aws_configure_credentials_non_oidc": {"level": "WARN"},
-            "_check_for_pull_request_create_or_approval": {"level": "FAIL"},
+            "_check_for_pull_request_create_or_approve": {"level": "FAIL"},
         }
         self.action = {}
 
@@ -244,7 +244,7 @@ class Analyzer:
                             passed = False
         return passed
 
-    def _check_for_pull_request_create_or_approval(self) -> bool:
+    def _check_for_pull_request_create_or_approve(self) -> bool:
         passed = True
         GH_CLI_PR_APPROVAL_REGEX = f"gh pr (review.*--approve|create.*)"
         # TODO: add checks for alternatives ways to create/approve pull request
