@@ -130,6 +130,8 @@ def _main():
                 else:
                     print(f"{Colors.PURPLE}Summary{Colors.END}: Passed all checks \U0001F44D")
                     exit(SUCCESS)
+        if failed_actions:
+            exit(FAILED)
 
 
 if __name__ == "__main__":
