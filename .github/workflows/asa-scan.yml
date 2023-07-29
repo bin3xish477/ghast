@@ -17,3 +17,4 @@ jobs:
         verbose: true
         no-summary: true
         ignore-checks: 'check_for_inline_script check_for_cache_action_usage'
+      continue-on-error: true # adding this since this workflow is always expected to fail
