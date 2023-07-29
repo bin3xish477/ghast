@@ -48,7 +48,6 @@ def _parse_args():
         "--ignore-checks",
         "-k",
         nargs="+",
-        type=list,
         metavar="CHECK",
         help="specify checks to ignore",
     )

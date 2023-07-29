@@ -1,0 +1,14 @@
+name: 'RunActionsSecurityAnalzyer'
+on:
+  push:
+    branches:
+      - main
+      - dev
+jobs:
+  RunAsa:
+    uses: ./action.yml
+    with:
+      dir: ./actions
+      verbose: true
+      no-summary: true
+      ignore-checks: 'check_for_inline_script check_for_cache_action_usage'

@@ -1,0 +1,46 @@
+name: 'actions-security-analyzer'
+description: 'Scan your GitHub actions folder for common security vulnerabilities'
+author: 'bin3xish477'
+inputs:
+  dir:
+    description: 'path to directory with GitHub Actions files to scan'
+    required: false
+    default: './.github/workflows'
+  ignore-checks:
+    description: 'specify checks to ignore'
+    required: false
+  ignore-warnings:
+    description: 'ignore checks labeled as WARN'
+    required: false
+  no-summary:
+    description: "don't show tool summary in output"
+    required: false
+  verbose:
+    description: 'enable verbose output'
+    required: false
+runs:
+  using: composite
+  steps:
+  - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
+  - uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
+    with:
+      python-version: '3.11' 
+  - run: |
+      pip install actions-security-analyzer
+      args=()
+      [ ! -z ${{ inputs.dir }} ] && args+=('--dir', "$INPUTS_DIR")
+      [ ! -z ${{ inputs.ignore-warnings }} ] && args+=('--ignore-warnings')
+      [ ! -z ${{ inputs.no-summary }}] && args+=('--no-summary')
+      [ ! -z ${{ inputs.verbose }}] && args+=('--verbose')
+
+      if [ ! -z ${{ inputs.ignore_checks }} ]; then
+        checks=()
+        for check in $(echo ${{ inputs.ignore_checks }} )
+        do
+          checks+=($check)
+        done
+          args+=('--ignore-checks', ${checks[@]/,/ })
+      fi
+      $HOME/.local/bin/asa ${arr[@]/,/ }
+    shell: bash
+
