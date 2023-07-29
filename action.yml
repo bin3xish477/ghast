@@ -44,5 +44,5 @@ runs:
 
       asa ${args[@]/,/ }
 
-    shell: bash
+  shell: bash
 
