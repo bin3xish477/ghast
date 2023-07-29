@@ -38,7 +38,7 @@ jobs:
     - name: "Checkout repo"
       uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
     - name: "Run asa scanner"
-      uses: "./" # TODO: update this to point to actual action on Marketplace!
+      uses: "bin3xish477/asa@a6f5eb8c20e936c07326a1eb6aa6427b25494045"
       with:
         dir: "./actions/"
         verbose: true
