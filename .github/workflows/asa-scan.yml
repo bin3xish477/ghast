@@ -10,6 +10,8 @@ jobs:
     steps:
     - name: "Checkout repo"
       uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
+    - name: "List workspace"
+      run: "ls ${{ github.workspace }}"
     - name: "Run asa scanner"
       uses: "./action.yml"
       with:
