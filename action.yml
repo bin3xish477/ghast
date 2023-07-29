@@ -33,9 +33,9 @@ runs:
       [ ! -z ${{ inputs.no-summary }} ] && args+=('--no-summary')
       [ ! -z ${{ inputs.verbose }} ] && args+=('--verbose')
 
-      if [ ! -z ${{ inputs.ignore_checks }} ]; then
+      if [ ! -z ${{ inputs.ignore-checks }} ]; then
         checks=()
-        for check in $(echo ${{ inputs.ignore_checks }} )
+        for check in $(echo ${{ inputs.ignore-checks }} )
         do
           checks+=($check)
         done

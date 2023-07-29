@@ -13,7 +13,7 @@ jobs:
     - name: "Run asa scanner"
       uses: "./"
       with:
-        dir: ./actions/
+        dir: "./actions/"
         verbose: true
         no-summary: true
         ignore-checks: 'check_for_inline_script check_for_cache_action_usage'
