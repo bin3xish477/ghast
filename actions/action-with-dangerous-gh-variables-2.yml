@@ -1,0 +1,18 @@
+name: 'ActionWithDangerousGHVariableExample2'
+on: push
+jobs:
+  SomeJob:
+    steps:
+      - name: Check PR title
+        run: |
+          title="${{ github.event.pull_request.title }}"
+          if [[ $title =~ ^octocat ]]; then
+          echo "PR title starts with 'octocat'"
+          exit 0
+          else
+          echo "PR title did not start with 'octocat'"
+          exit 1
+          fi
+      - name:
+        run: "echo another inline script..."
+

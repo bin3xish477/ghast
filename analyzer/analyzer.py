@@ -1,6 +1,6 @@
 """analyzer.py contains all the INFOic related to analyzing GitHub Actions"""
 from colors import Colors
-from re import match
+from re import search
 
 
 class Analyzer:
@@ -54,7 +54,7 @@ class Analyzer:
             for step in self.jobs[job]["steps"]:
                 if "uses" in step:
                     uses = step["uses"]
-                    if match(ACTION_WITH_VERSION_REGEX, uses):
+                    if search(ACTION_WITH_VERSION_REGEX, uses):
                         if self.verbose:
                             print(
                                 f"{Colors.LIGHT_GRAY}INFO{Colors.END} step using action('{uses}') with version number instead of a SHA hash"
@@ -84,7 +84,7 @@ class Analyzer:
             for step in steps:
                 if "run" in step:
                     script = step["run"]
-                    variable = match(DANGEROUS_GITHUB_CONTEXT_VARIABLE_REGEX, script)
+                    variable = search(DANGEROUS_GITHUB_CONTEXT_VARIABLE_REGEX, script)
                     if variable:
                         if self.verbose:
                             print(
@@ -125,7 +125,7 @@ class Analyzer:
             steps = self.jobs[job]["steps"]
             for step in steps:
                 if "uses" in step:
-                    action = match(CACHE_ACTION_REGEX, step["uses"])
+                    action = search(CACHE_ACTION_REGEX, step["uses"])
                     if action:
                         if self.verbose:
                             print(
@@ -226,7 +226,7 @@ class Analyzer:
             steps = self.jobs[job]["steps"]
             for step in steps:
                 if "uses" in step:
-                    action = match(CONFIGURE_AWS_CREDS_ACTION_REGEX, step["uses"])
+                    action = search(CONFIGURE_AWS_CREDS_ACTION_REGEX, step["uses"])
                     if action:
                         if any(input in non_oidc_inputs for input in step["with"]):
                             if self.verbose:
