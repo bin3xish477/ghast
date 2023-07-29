@@ -28,12 +28,6 @@ runs:
       pip install actions-security-analyzer
       args=()
 
-      echo ${{ inputs.dir }}
-      echo ${{ inputs.no-summary }}
-      echo ${{ inputs.ignore-warnings }}
-      echo ${{ inputs.verbose }}
-      echo ${{ inputs.ignore-checks }}
-
       [ ! -z ${{ inputs.dir }} ] && args+=('--dir', ${{ inputs.dir }})
       [ ! -z ${{ inputs.ignore-warnings }} ] && args+=('--ignore-warnings')
       [ ! -z ${{ inputs.no-summary }} ] && args+=('--no-summary')
@@ -48,8 +42,7 @@ runs:
           args+=('--ignore-checks', ${checks[@]/,/ })
       fi
 
-      echo "ARGS: ${arr[@]/,/ }"
-      asa ${arr[@]/,/ }
+      asa ${args[@]/,/ }
 
     shell: bash
 
