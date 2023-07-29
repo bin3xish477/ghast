@@ -11,9 +11,9 @@ jobs:
     - name: "Checkout repo"
       uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
     - name: "Run asa scanner"
-      uses: "${{ github.workspace }}/action.yml"
+      uses: "./action.yml"
       with:
-        dir: ${{ github.workspace }}/actions/
+        dir: ./actions/
         verbose: true
         no-summary: true
         ignore-checks: 'check_for_inline_script check_for_cache_action_usage'
