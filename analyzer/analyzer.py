@@ -33,19 +33,18 @@ class Analyzer:
         self.action = {}
 
     def _print_failed_check_msg(self, check: str, level: str):
+        c = None
         if level == "FAIL":
-            level_color = Colors.RED
+            c = Colors.RED
         elif level == "WARN":
-            level_color = Colors.LIGHT_GREEN
-        else:
-            level_color = Colors.LIGHT_PURPLE
+            c = Colors.LIGHT_GREEN
         print(
-            f"{level_color}{level}{Colors.END} {Colors.YELLOW}{check[1:]}{Colors.END}",
+            f"{c}{level}{Colors.END} {Colors.YELLOW}{check[1:]}{Colors.END}",
         )
 
     def _action_has_required_elements(self) -> bool:
         passed = True
-        # a check for "permissions" is not done here because it is not required
+        # NOTE: a check for "permissions" is not done here because it is not required
         if not all(key in self.action for key in ["name", "on", "jobs"]):
             passed = False
         for job in self.jobs.keys():
@@ -175,7 +174,7 @@ class Analyzer:
 
     def _check_for_self_hosted_runners(self) -> bool:
         passed = True
-        # ***** default runners as of 7/17/23 *****
+        # NOTE: ***** default runners as of 7/17/23 *****
         default_runners = [
             "windows-latest",
             "windows-2022",
@@ -219,7 +218,7 @@ class Analyzer:
 
     def _check_for_aws_configure_credentials_non_oidc(self) -> bool:
         passed = True
-        # if these are specifed in the configure-aws-credentials action
+        # NOTE: if these are specifed in the configure-aws-credentials action
         # then the action will not use GitHub's OIDC provider
         # see this: https://github.com/aws-actions/configure-aws-credentials#assuming-a-role
         CONFIGURE_AWS_CREDS_ACTION_REGEX = (
