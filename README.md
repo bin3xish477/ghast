@@ -8,7 +8,7 @@ asa (actions-security-analzyer) is a tool to analyze the security posture of you
 > Make sure you have `$HOME/.local/bin` in your PATH
 
 ```
-pip3 install actions-security-analzyer
+pip install actions-security-analzyer
 ```
 
 ### Usage
