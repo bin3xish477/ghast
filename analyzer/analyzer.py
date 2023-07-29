@@ -9,9 +9,10 @@ class Analyzer:
     dictionary.
     """
 
-    def __init__(self, verbose: bool = False, ignore_warnings: bool = False) -> None:
+    def __init__(self, verbose: bool = False, ignore_warnings: bool = False, ignore_checks: list = []) -> None:
         self.verbose = verbose
         self.ignore_warnings = ignore_warnings
+        self.ignore_checks = ignore_checks
         self.checks = {
             "_check_for_3p_actions_without_hash": {"level": "FAIL"},
             "_check_for_allow_unsecure_commands": {"level": "FAIL"},
@@ -22,6 +23,8 @@ class Analyzer:
             "_check_for_script_injection": {"level": "FAIL"},
             "_check_for_self_hosted_runners": {"level": "WARN"},
             "_check_for_aws_configure_credentials_non_oidc": {"level": "WARN"},
+            "_check_for_generic_hardcoded_secrets": {"level": "FAIL"},
+            "_check_for_pull_request_create_or_approval": {"level": "FAIL"},
         }
         self.action = {}
 
@@ -210,7 +213,7 @@ class Analyzer:
                         break
         return passed
 
-    def _check_for_aws_configure_credentials_non_oidc(self):
+    def _check_for_aws_configure_credentials_non_oidc(self) -> bool:
         passed = True
         # if these are specifed in the configure-aws-credentials action
         # then the action will not use GitHub's OIDC provider
@@ -235,6 +238,27 @@ class Analyzer:
                                 )
                         if passed:
                             passed = False
+        return passed
+
+    def _check_for_generic_hardcoded_secrets(self) -> bool:
+        passed = True
+        return passed
+
+    def _check_for_pull_request_create_or_approval(self) -> bool:
+        passed = True
+        GH_CLI_PR_APPROVAL_REGEX = f"gh pr (review.*--approve|create.*)"
+        for job in self.jobs:
+            steps = self.jobs[job]["steps"]
+            for step in steps:
+                if "run" in step:
+                    script = step["run"]
+                    match = search(GH_CLI_PR_APPROVAL_REGEX, script)
+                    if match:
+                        if self.verbose:
+                            print(
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') has a step('{step['name']}') that creates or approves a pull request"
+                            )
+                        passed = False
         return passed
 
     def get_checks(self) -> list:
@@ -266,6 +290,8 @@ class Analyzer:
                 if self.ignore_warnings:
                     if self.checks[check]["level"] == "WARN":
                         continue
+                if check[1:] in self.ignore_checks:
+                    continue
                 if not Analyzer.__dict__[check](self):
                     fail_checks.append(check)
                     if passed_all_checks:

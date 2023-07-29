@@ -1,0 +1,10 @@
+name: ActionThatCreateOrApprovesPR
+on: [pull_request]
+jobs:
+  SomeJobThatRequiresAWSCreds:
+    steps:
+      - name: Create a PR
+        run: 'gh pr create --title "The bug is fixed" --body "Everything works again"'
+      - name: Approve PR
+        run: 'gh pr review --approve'
+

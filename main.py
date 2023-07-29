@@ -44,6 +44,13 @@ def _parse_args():
         action="store_true",
         help="ignore checks labeled as warning",
     )
+    parser.add_argument(
+        "--ignore-checks",
+        "-k",
+        nargs="+",
+        metavar="CHECK",
+        help="specify checks to ignore",
+    )
     parser.add_argument("--no-summary", "-n", action="store_true", help="don't show tool summary section")
     return parser.parse_args()
 
@@ -57,9 +64,10 @@ def _main():
     list_checks = args.list_checks
     verbose = args.verbose
     ignore_warnings = args.ignore_warnings
+    ignore_checks = args.ignore_checks
     no_summary = args.no_summary
 
-    analyzer = Analyzer(ignore_warnings=ignore_warnings, verbose=verbose)
+    analyzer = Analyzer(ignore_warnings=ignore_warnings, ignore_checks=ignore_checks, verbose=verbose)
 
     errored = False
     failed_actions = []
