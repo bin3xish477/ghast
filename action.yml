@@ -42,6 +42,7 @@ runs:
           args+=('--ignore-checks', ${checks[@]/,/ })
       fi
 
+      echo "ARGS: ${args[@]/,/ }"
       asa ${args[@]/,/ }
 
     shell: bash
