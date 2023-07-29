@@ -6,7 +6,7 @@ on:
       - dev
 jobs:
   RunAsa:
-    uses: ./action.yml
+    uses: "${{ github.workspace }}/action.yml"
     with:
       dir: ./actions
       verbose: true
