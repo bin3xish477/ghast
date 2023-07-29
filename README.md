@@ -20,6 +20,32 @@ asa --file action.yml --ignore-warnings
 asa --list-checks
 ```
 
+### Use `asa` in Your GitHub Workflows
+
+#### Example
+
+```yaml
+name: 'RunActionsSecurityAnalzyer'
+on:
+  push:
+    branches:
+      - main
+      - dev
+jobs:
+  RunAsa:
+    runs-on: ubuntu-latest
+    steps:
+    - name: "Checkout repo"
+      uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
+    - name: "Run asa scanner"
+      uses: "./" # TODO: update this to point to actual action on Marketplace!
+      with:
+        dir: "./actions/"
+        verbose: true
+        no-summary: true
+        ignore-checks: 'check_for_inline_script check_for_cache_action_usage'
+```
+
 ### Checks Performed by `asa`
 
 1. Name: `check_for_3p_actions_without_hash`, Level: `FAIL`

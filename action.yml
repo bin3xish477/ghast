@@ -1,6 +1,9 @@
 name: 'actions-security-analyzer'
 description: 'Scan your GitHub actions folder for common security vulnerabilities'
 author: 'bin3xish477'
+branding:
+  icon: 'shield'
+  color: 'green'
 inputs:
   dir:
     description: 'path to directory with GitHub Actions files to scan'
