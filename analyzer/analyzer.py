@@ -9,10 +9,15 @@ class Analyzer:
     dictionary.
     """
 
-    def __init__(self, verbose: bool = False, ignore_warnings: bool = False, ignore_checks: list = []) -> None:
-        self.verbose = verbose
+    def __init__(
+        self,
+        ignore_checks: list,
+        ignore_warnings: bool = False,
+        verbose: bool = False,
+    ) -> None:
         self.ignore_warnings = ignore_warnings
-        self.ignore_checks = ignore_checks
+        self.ignore_checks = ignore_checks or []
+        self.verbose = verbose
         self.checks = {
             "_check_for_3p_actions_without_hash": {"level": "FAIL"},
             "_check_for_allow_unsecure_commands": {"level": "FAIL"},
@@ -23,7 +28,6 @@ class Analyzer:
             "_check_for_script_injection": {"level": "FAIL"},
             "_check_for_self_hosted_runners": {"level": "WARN"},
             "_check_for_aws_configure_credentials_non_oidc": {"level": "WARN"},
-            "_check_for_generic_hardcoded_secrets": {"level": "FAIL"},
             "_check_for_pull_request_create_or_approval": {"level": "FAIL"},
         }
         self.action = {}
@@ -240,13 +244,11 @@ class Analyzer:
                             passed = False
         return passed
 
-    def _check_for_generic_hardcoded_secrets(self) -> bool:
-        passed = True
-        return passed
-
     def _check_for_pull_request_create_or_approval(self) -> bool:
         passed = True
         GH_CLI_PR_APPROVAL_REGEX = f"gh pr (review.*--approve|create.*)"
+        # TODO: add checks for alternatives ways to create/approve pull request
+        # e.g. via curl or github script ('actions/github-script')
         for job in self.jobs:
             steps = self.jobs[job]["steps"]
             for step in steps:
@@ -262,24 +264,9 @@ class Analyzer:
         return passed
 
     def get_checks(self) -> list:
-        """Returns all available checks performed against
-        provided GitHub Action.
-
-        Returns:
-            list: all available checks performed by Analzyer
-        """
         return [*self.checks.keys()]
 
     def run_checks(self, action: dict) -> bool:
-        """Run all checks against a GitHub Action
-
-        Args:
-            action (dict): the dict representation of the Action YAML file.
-
-        Returns:
-            bool: returns False if any checks fails.
-        """
-
         self.action = action
         self.jobs = self.action["jobs"]
 

@@ -48,6 +48,7 @@ def _parse_args():
         "--ignore-checks",
         "-k",
         nargs="+",
+        type=list,
         metavar="CHECK",
         help="specify checks to ignore",
     )
@@ -67,7 +68,7 @@ def _main():
     ignore_checks = args.ignore_checks
     no_summary = args.no_summary
 
-    analyzer = Analyzer(ignore_warnings=ignore_warnings, ignore_checks=ignore_checks, verbose=verbose)
+    analyzer = Analyzer(ignore_checks=ignore_checks, ignore_warnings=ignore_warnings, verbose=verbose)
 
     errored = False
     failed_actions = []
