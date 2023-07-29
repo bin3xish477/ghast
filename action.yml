@@ -27,10 +27,10 @@ runs:
   - run: |
       pip install actions-security-analyzer
       args=()
-      [ ! -z ${{ inputs.dir }} ] && args+=('--dir', "$INPUTS_DIR")
+      [ ! -z ${{ inputs.dir }} ] && args+=('--dir', ${{ inputs.dir }})
       [ ! -z ${{ inputs.ignore-warnings }} ] && args+=('--ignore-warnings')
-      [ ! -z ${{ inputs.no-summary }}] && args+=('--no-summary')
-      [ ! -z ${{ inputs.verbose }}] && args+=('--verbose')
+      [ ! -z ${{ inputs.no-summary }} ] && args+=('--no-summary')
+      [ ! -z ${{ inputs.verbose }} ] && args+=('--verbose')
 
       if [ ! -z ${{ inputs.ignore_checks }} ]; then
         checks=()
@@ -40,6 +40,8 @@ runs:
         done
           args+=('--ignore-checks', ${checks[@]/,/ })
       fi
-      $HOME/.local/bin/asa ${arr[@]/,/ }
+
+      asa ${arr[@]/,/ }
+
     shell: bash
 
