@@ -40,7 +40,7 @@ jobs:
     - name: "Checkout repo"
       uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
     - name: "Run asa scanner"
-      uses: "bin3xish477/asa@c9b2aaf2f038e58117f17b90a0f15f0ab4865fa4"
+      uses: "bin3xish477/asa@ee733379e314d44f1a960a70339ee5e5d19e404d"
       with:
         dir: "./actions/"
         verbose: true
