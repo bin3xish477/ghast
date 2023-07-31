@@ -39,9 +39,9 @@ runs:
 
 
       [ ! -z $dir ] && args+=('--dir', ${{ inputs.dir }})
-      [ ! -z $ignore_warnings && [[ $ignore_warnings != "false" ]] && args+=('--ignore-warnings')
-      [ ! -z $no_summary && [[ $no_summary != "false" ]] && args+=('--no-summary')
-      [ ! -z $verbose && [[ $verbose != "false" ]] && args+=('--verbose')
+      [ ! -z $ignore_warnings ] && [[ $ignore_warnings != "false" ]] && args+=('--ignore-warnings')
+      [ ! -z $no_summary ] && [[ $no_summary != "false" ]] && args+=('--no-summary')
+      [ ! -z $verbose ] && [[ $verbose != "false" ]] && args+=('--verbose')
 
       if [[ ! -z "$ignore_checks" ]]; then
         checks=()
