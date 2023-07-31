@@ -37,7 +37,6 @@ runs:
       no_summary=$( echo ${{ inputs.no-summary }} | tr '[:upper:]' '[:lower:]')
       verbose=$( echo ${{ inputs.verbose }} | tr '[:upper:]' '[:lower:]')
 
-
       [ ! -z $dir ] && args+=('--dir', ${{ inputs.dir }})
       [ ! -z $ignore_warnings ] && [[ $ignore_warnings != "false" ]] && args+=('--ignore-warnings')
       [ ! -z $no_summary ] && [[ $no_summary != "false" ]] && args+=('--no-summary')

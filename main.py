@@ -12,6 +12,7 @@ FAILED = 1
 SUCCESS = 0
 
 
+# reference: https://stackoverflow.com/a/36470466
 def _rewrite_pyyaml_boolean_recognition_rules():
     for ch in "OoYyNn":
         if len(Resolver.yaml_implicit_resolvers[ch]) == 1:

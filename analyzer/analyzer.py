@@ -1,6 +1,7 @@
 """analyzer.py contains all the INFOic related to analyzing GitHub Actions"""
 from colors import Colors
 from re import search
+from pathlib import Path
 
 
 class Analyzer:
@@ -191,6 +192,7 @@ class Analyzer:
             "macos-11",
         ]
         for job in self.jobs.keys():
+            # TODO: Add verbosity to print which self-hosted runners were found.
             if "strategy" in self.jobs[job] and "matrix" in self.jobs[job]["strategy"]:
                 matrix = self.jobs[job]["strategy"]["matrix"]
                 if "runner" in matrix:
@@ -284,4 +286,5 @@ class Analyzer:
                         passed_all_checks = False
             for check in fail_checks:
                 self._print_failed_check_msg(check, self.checks[check]["level"])
+
         return passed_all_checks
