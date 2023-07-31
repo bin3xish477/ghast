@@ -31,14 +31,21 @@ runs:
       pip install actions-security-analyzer
       args=()
 
-      [ ! -z ${{ inputs.dir }} ] && args+=('--dir', ${{ inputs.dir }})
-      [ ! -z ${{ inputs.ignore-warnings }} ] && args+=('--ignore-warnings')
-      [ ! -z ${{ inputs.no-summary }} ] && args+=('--no-summary')
-      [ ! -z ${{ inputs.verbose }} ] && args+=('--verbose')
+      dir=$( echo ${{ inputs.dir }} | tr '[:upper:]' '[:lower:]')
+      ignore_warnings=$( echo ${{ inputs.ignore-warnings }} | tr '[:upper:]' '[:lower:]')
+      ignore_checks=$( echo ${{ inputs.ignore-checks }} | tr '[:upper:]' '[:lower:]')
+      no_summary=$( echo ${{ inputs.no-summary }} | tr '[:upper:]' '[:lower:]')
+      verbose=$( echo ${{ inputs.verbose }} | tr '[:upper:]' '[:lower:]')
 
-      if [[ ! -z "${{ inputs.ignore-checks }}" ]]; then
+
+      [ ! -z $dir ] && args+=('--dir', ${{ inputs.dir }})
+      [ ! -z $ignore_warnings && [[ $ignore_warnings != "false" ]] && args+=('--ignore-warnings')
+      [ ! -z $no_summary && [[ $no_summary != "false" ]] && args+=('--no-summary')
+      [ ! -z $verbose && [[ $verbose != "false" ]] && args+=('--verbose')
+
+      if [[ ! -z "$ignore_checks" ]]; then
         checks=()
-        for check in $(echo ${{ inputs.ignore-checks }} )
+        for check in $(echo $ignore_checks)
         do
           checks+=("$check")
         done
