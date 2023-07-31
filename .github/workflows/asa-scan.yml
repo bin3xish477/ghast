@@ -19,4 +19,5 @@ jobs:
         #verbose: true
         #no-summary: true
         #ignore-checks: ''
+        ignore-warnings: true
       continue-on-error: true # adding this since this workflow is always expected to fail
