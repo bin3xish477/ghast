@@ -77,9 +77,13 @@ class Analyzer:
             for step in steps:
                 if "run" in step:
                     if self.verbose:
-                        print(
-                            f"{Colors.LIGHT_GRAY}INFO{Colors.END} found inline script in job('{job}').step('{step['name']}')"
-                        )
+                        # NOTE: name is not required according to GitHub Docs: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#name
+                        if 'name' in step:
+                            print(
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} found inline script in job('{job}').step('{step['name']}')"
+                            )
+                        else:
+                            print(f"{Colors.LIGHT_GRAY}INFO{Colors.END} found step with inline script in job('{job}')")
                     passed = False
         return passed
 
