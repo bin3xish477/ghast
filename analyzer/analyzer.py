@@ -30,6 +30,7 @@ class Analyzer:
             "_check_for_self_hosted_runners": {"level": "WARN"},
             "_check_for_aws_configure_credentials_non_oidc": {"level": "WARN"},
             "_check_for_pull_request_create_or_approve": {"level": "FAIL"},
+            "_check_for_remote_script": {"level": "WARN"},
         }
         self.action = {}
 
@@ -127,6 +128,23 @@ class Analyzer:
         elif type(event_triggers) == str:
             if event_triggers == "pull_request_target":
                 passed = False
+        return passed
+
+    def _check_for_remote_script(self) -> bool:
+        passed = True
+        POTENTIAL_REMOTE_SCRIPT = r"((?<=[^a-zA-Z0-9])(?:https?\:\/\/|[a-zA-Z0-9]{1,}\.{1}|\b)(?:\w{1,}\.{1}){1,5}(?:com|org|edu|gov|uk|net|ca|de|jp|fr|au|us|ru|ch|it|nl|se|no|es|mil|iq|io|ac|ly|sm){1}(?:\/[a-zA-Z0-9]{1,})*)"
+        for job in self.jobs.keys():
+            steps = self.jobs[job]["steps"]
+            for step in steps:
+                if "run" in step:
+                    script = step["run"]
+                    variable = search(POTENTIAL_REMOTE_SCRIPT, script)
+                    if variable:
+                        if self.verbose:
+                            print(
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} remote script ('{variable.group()}') being called"
+                            )
+                        passed = False
         return passed
 
     def _check_for_cache_action_usage(self) -> bool:
