@@ -1,6 +1,7 @@
 """analyzer.py contains all the INFOic related to analyzing GitHub Actions"""
+from sys import flags
 from colors import Colors
-from re import search
+from re import search, DOTALL
 
 
 class Analyzer:
@@ -111,9 +112,15 @@ class Analyzer:
             for step in steps:
                 if "env" in step and "ACTIONS_ALLOW_UNSECURE_COMMANDS" in step["env"]:
                     if self.verbose:
-                        print(
-                            f"{Colors.LIGHT_GRAY}INFO{Colors.END} step('{step['name']}') contains dangerous ACTIONS_ALLOW_UNSECURE_COMMANDS environment variable"
-                        )
+                        if "name" in step:
+                            print(
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} step('{step['name']}') contains dangerous ACTIONS_ALLOW_UNSECURE_COMMANDS environment variable"
+                            )
+                        else:
+                            print(
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} step contains dangerous ACTIONS_ALLOW_UNSECURE_COMMANDS environment variable"
+                            )
+
                     passed = False
                     return passed
         return passed
@@ -259,30 +266,59 @@ class Analyzer:
                     if action:
                         if any(input in non_oidc_inputs for input in step["with"]):
                             if self.verbose:
-                                print(
-                                    f"{Colors.LIGHT_GRAY}INFO{Colors.END} found step('{step['name']}') not using OIDC with `configure-aws-credentials`"
-                                )
+                                if "name" in step:
+                                    print(
+                                        f"{Colors.LIGHT_GRAY}INFO{Colors.END} found step('{step['name']}') not using OIDC with `configure-aws-credentials`"
+                                    )
+                                else:
+                                    print(
+                                        f"{Colors.LIGHT_GRAY}INFO{Colors.END} found step not using OIDC with `configure-aws-credentials`"
+                                    )
                         if passed:
                             passed = False
         return passed
 
     def _check_for_pull_request_create_or_approve(self) -> bool:
         passed = True
-        GH_CLI_PR_APPROVAL_REGEX = f"gh pr (review.*--approve|create.*)"
-        # TODO: add checks for alternatives ways to create/approve pull request
-        # e.g. via curl or github script ('actions/github-script')
+
+        def __print_msg(job: str, step: dict):
+            if self.verbose:
+                if "name" in step:
+                    print(
+                        f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') has a step('{step['name']}') that creates or approves a pull request"
+                    )
+                else:
+                    print(
+                        f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') has a step that creates or approves a pull request"
+                    )
+
+        GH_CLI_PR_CREATE_APPROVE_REGEX = r"gh pr (review.*--approve|create.*)"
+        GITHUB_SCRIPT_ACTION_REGEX = r"actions\/github\-script@(v\d+(\.\d+)?(\.\d+)?|[a-f0-9]{40})"
+        GITHUB_SCRIPT_CREATE_APPROVE_PR_REGEX = r".*github\.rest\.pulls\.(create\(.*|reviews\(.*APPROVE.*)"
+        CURL_CREATE_APPROVE_PR_REGEX = (
+            r".*curl.*https:\/\/api\.github\.com\/repos\/[0-9a-zA-Z-._]+\/[0-9a-zA-Z-._]+\/pulls\/[0-9]{1,}\/reviews.*"
+        )
         for job in self.jobs:
             steps = self.jobs[job]["steps"]
             for step in steps:
                 if "run" in step:
                     script = step["run"]
-                    match = search(GH_CLI_PR_APPROVAL_REGEX, script)
+                    match = search(GH_CLI_PR_CREATE_APPROVE_REGEX, script, flags=DOTALL) or search(
+                        CURL_CREATE_APPROVE_PR_REGEX, script, flags=DOTALL
+                    )
                     if match:
-                        if self.verbose:
-                            print(
-                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') has a step('{step['name']}') that creates or approves a pull request"
-                            )
+                        __print_msg(job, step)
+
                         passed = False
+                if "uses" in step:
+                    action = search(GITHUB_SCRIPT_ACTION_REGEX, step["uses"])
+                    if action:
+                        if "script" in step["with"]:
+                            script = step["with"]["script"]
+                            match = search(GITHUB_SCRIPT_CREATE_APPROVE_PR_REGEX, script, flags=DOTALL)
+                            if match:
+                                __print_msg(job, step)
+                                passed = False
         return passed
 
     def get_checks(self) -> list:

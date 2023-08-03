@@ -114,7 +114,7 @@ def _main():
             errored = True
             print(f"[{Colors.LIGHT_GRAY}INFO{Colors.END}] must provide `--file` or `--dir`")
 
-    except (FileNotFoundError, KeyError, YAMLError) as exception:
+    except Exception as exception:
         errored = True
         print(f"[{Colors.RED}ERROR{Colors.END}] {exception}")
     finally:

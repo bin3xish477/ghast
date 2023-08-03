@@ -1,0 +1,10 @@
+name: "ActionCreatePRGHScript"
+on: [pull_request]
+jobs:
+  SomeJob:
+    steps:
+      - name: "Create PR using GH Script Action"
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.pulls.create(...)
