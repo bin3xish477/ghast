@@ -1,7 +1,6 @@
 """analyzer.py contains all the INFOic related to analyzing GitHub Actions"""
 from colors import Colors
 from re import search
-from pathlib import Path
 
 
 class Analyzer:
@@ -132,17 +131,17 @@ class Analyzer:
 
     def _check_for_remote_script(self) -> bool:
         passed = True
-        POTENTIAL_REMOTE_SCRIPT = r"((?<=[^a-zA-Z0-9])(?:https?\:\/\/|[a-zA-Z0-9]{1,}\.{1}|\b)(?:\w{1,}\.{1}){1,5}(?:com|org|edu|gov|uk|net|ca|de|jp|fr|au|us|ru|ch|it|nl|se|no|es|mil|iq|io|ac|ly|sm){1}(?:\/[a-zA-Z0-9]{1,})*)"
+        POTENTIAL_REMOTE_SCRIPT_REGEX = r"((?<=[^a-zA-Z0-9])(?:https?\:\/\/|[a-zA-Z0-9]{1,}\.{1}|\b)(?:\w{1,}\.{1}){1,5}(?:com|org|edu|gov|uk|net|ca|de|jp|fr|au|us|ru|ch|it|nl|se|no|es|mil|iq|io|ac|ly|sm){1}(?:\/[a-zA-Z0-9.]{1,})*)"
         for job in self.jobs.keys():
             steps = self.jobs[job]["steps"]
             for step in steps:
                 if "run" in step:
                     script = step["run"]
-                    variable = search(POTENTIAL_REMOTE_SCRIPT, script)
+                    variable = search(POTENTIAL_REMOTE_SCRIPT_REGEX, script)
                     if variable:
                         if self.verbose:
                             print(
-                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} remote script ('{variable.group()}') being called"
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} remote script('{variable.group()}') found in inline script"
                             )
                         passed = False
         return passed

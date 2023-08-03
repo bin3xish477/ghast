@@ -10,7 +10,7 @@ from analyzer.analyzer import Analyzer
 @pytest.fixture(name="analyzer")
 def analyzer_fixture():
     """Returns instance of Analyzer class as fixture for pytests"""
-    return Analyzer()
+    return Analyzer(ignore_checks=[])
 
 
 def test_all_checks(analyzer):

