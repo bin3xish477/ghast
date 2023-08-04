@@ -39,7 +39,7 @@ jobs:
       uses: "bin3xish477/ghast@ee733379e314d44f1a960a70339ee5e5d19e404d"
 ```
 
-#### See Additional Workflow Examples
+### See Additional Workflow Examples
 [Additional Ghast Workflow Examples](EXAMPLES.md)
 
 ### Checks Performed by `ghast`

@@ -62,7 +62,7 @@ jobs:
         dir: "./actions/"
 ```
 
-#### Run in verbose mode with no summary
+#### Run in verbose mode and don't show tool summary section
 
 ```yaml
 name: 'RunGhast'
