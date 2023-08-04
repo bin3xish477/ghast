@@ -42,7 +42,7 @@ jobs:
     - name: "Checkout repo"
       uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
     - name: "Run Ghast"
-      uses: "bin3xish477/ghast@7ca5b2eaf9a3f3794e4a35c6e02240a5504a01a7"
+      uses: "bin3xish477/ghast@591140d3068c278519062744c180bd3198b7394c"
       with:
         dir: "./actions/"
         verbose: true
