@@ -9,7 +9,7 @@ GHAST (GitHub Actions Static Analysis Tool) is a tool to analyze the security po
 > Make sure you have `$HOME/.local/bin` in your PATH
 
 ```
-pip install ghast-scanner
+python3 -m pip install .
 ```
 
 ### Usage
@@ -23,17 +23,12 @@ ghast --list-checks
 
 ### Use `ghast` in Your GitHub Workflows
 
-#### Example
+#### Default Workflow
 
 ```yaml
 name: 'RunGhast'
 on:
   push:
-    branches:
-      - main
-      - dev
-    paths:
-      - '.github/workflows/**'
 jobs:
   RunGhast:
     runs-on: ubuntu-latest
@@ -42,12 +37,10 @@ jobs:
       uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
     - name: "Run Ghast"
       uses: "bin3xish477/ghast@ee733379e314d44f1a960a70339ee5e5d19e404d"
-      with:
-        dir: "./actions/"
-        verbose: true
-        no-summary: true
-        ignore-checks: 'check_for_inline_script check_for_cache_action_usage'
 ```
+
+#### See Additional Workflow Examples
+[Additional Ghast Workflow Examples](EXAMPLES.md)
 
 ### Checks Performed by `ghast`
 
