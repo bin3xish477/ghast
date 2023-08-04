@@ -2,11 +2,12 @@
 from argparse import ArgumentParser
 from pathlib import Path
 from os import sep
+from yaml.resolver import Resolver
+from yaml import safe_load
 from analyzer.analyzer import Analyzer
 from colors import Colors
-from yaml.resolver import Resolver
-from yaml import safe_load, YAMLError
-from sys import exit
+
+import sys
 
 FAILED = 1
 SUCCESS = 0
@@ -127,12 +128,12 @@ def _main():
                     )
                     for action in failed_actions:
                         print(f" \u2022 {Colors.BOLD}{action}{Colors.END}")
-                    exit(FAILED)
+                    sys.exit(FAILED)
                 else:
                     print(f"{Colors.PURPLE}Summary{Colors.END}: Passed all checks \U0001F44D")
-                    exit(SUCCESS)
+                    sys.exit(SUCCESS)
         if failed_actions:
-            exit(FAILED)
+            sys.exit(FAILED)
 
 
 if __name__ == "__main__":
