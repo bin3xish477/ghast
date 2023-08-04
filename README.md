@@ -60,7 +60,7 @@ jobs:
 
     - This check looks for the usage of environment variable called `ACTIONS_ALLOW_UNSECURE_COMMANDS` which allows for an Action to get access to dangerous commands (`get-env`, `add-path`) which can lead to code injection and credential thefts opportunities.
 
-3. Name: `check_for_cache_action_usage`, Level: `WARN`
+3. Name: `check_for_cache_action`, Level: `WARN`
 
     - This check finds any usage of GitHub's caching Action (`actions/cache`) which may result in sensitive information disclosure or cache poisoning.
 
@@ -95,6 +95,15 @@ jobs:
 11. Name: `check_for_remote_script`, Level: `WARN`
 
     - This check looks for a URL in an inline script of a GitHub Action which usually signals the inclusion of a remote script which can be dangerous.
+  
+12. Name: `check_for_upload_download_artifact_action`, Level: `WARN`
+
+    - This check is essential for identifying any usage of GitHub's upload/download artifact Action, as it can potentially expose your workflow to compromised files. For instance, an uploaded artifact might contain a compiled binary from a previous workflow, but this binary could be compromised due to the introduction of malicious dependencies during the compilation phase. Consequently, if this tainted binary is executed within another workflow, it could lead to significant security risks. To mitigate such risks, it is crucial for users to conduct integrity checks on artifacts before consumption. This check serves as a valuable reminder to reinforce this security practice.
+
+#### Auxiliary Checks
+
+1. Name: `check_for_codeowners_file` - checks for existence of [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) file.
+
 ### References
 
 - [Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)

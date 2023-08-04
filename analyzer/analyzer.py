@@ -25,7 +25,8 @@ class Analyzer:
         self.checks = {
             "_check_for_3p_actions_without_hash": {"level": "FAIL"},
             "_check_for_allow_unsecure_commands": {"level": "FAIL"},
-            "_check_for_cache_action_usage": {"level": "WARN"},
+            "_check_for_cache_action": {"level": "WARN"},
+            "_check_for_upload_download_artifact_action": {"level": "WARN"},
             "_check_for_dangerous_write_permissions": {"level": "FAIL"},
             "_check_for_inline_script": {"level": "WARN"},
             "_check_for_pull_request_target": {"level": "FAIL"},
@@ -158,7 +159,7 @@ class Analyzer:
                         passed = False
         return passed
 
-    def _check_for_cache_action_usage(self) -> bool:
+    def _check_for_cache_action(self) -> bool:
         passed = True
         for job in self.jobs.keys():
             steps = self.jobs[job]["steps"]
@@ -169,6 +170,21 @@ class Analyzer:
                         if self.verbose:
                             print(
                                 f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') is using cache action('{action.group()}')"
+                            )
+                        passed = False
+        return passed
+
+    def _check_for_upload_download_artifact_action(self) -> bool:
+        passed = True
+        for job in self.jobs.keys():
+            steps = self.jobs[job]["steps"]
+            for step in steps:
+                if "uses" in step:
+                    action = search(analyzer.regex.UPLOAD_DOWNLOAD_ARTIFACTS_ACTION, step["uses"])
+                    if action:
+                        if self.verbose:
+                            print(
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') is using upload|download artifact action('{action.group()}')"
                             )
                         passed = False
         return passed
