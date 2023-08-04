@@ -1,7 +1,9 @@
 """analyzer.py contains all the INFOic related to analyzing GitHub Actions"""
-from sys import flags
-from colors import Colors
+
 from re import search, DOTALL
+from colors import Colors
+
+import analyzer.regex
 
 
 class Analyzer:
@@ -57,12 +59,11 @@ class Analyzer:
 
     def _check_for_3p_actions_without_hash(self) -> bool:
         passed = True
-        ACTION_WITH_VERSION_REGEX = r"([\w-]+)\/([\w-]+)@v\d+(\.\d+)?(\.\d+)?"
         for job in self.jobs.keys():
             for step in self.jobs[job]["steps"]:
                 if "uses" in step:
                     uses = step["uses"]
-                    if search(ACTION_WITH_VERSION_REGEX, uses):
+                    if search(analyzer.regex.ACTION_WITH_VERSION, uses):
                         if self.verbose:
                             print(
                                 f"{Colors.LIGHT_GRAY}INFO{Colors.END} step using action('{uses}') with version number instead of a SHA hash"
@@ -90,13 +91,12 @@ class Analyzer:
 
     def _check_for_script_injection(self) -> bool:
         passed = True
-        DANGEROUS_GITHUB_CONTEXT_VARIABLE_REGEX = r"\$\{\{.*github.+\}\}"
         for job in self.jobs.keys():
             steps = self.jobs[job]["steps"]
             for step in steps:
                 if "run" in step:
                     script = step["run"]
-                    variable = search(DANGEROUS_GITHUB_CONTEXT_VARIABLE_REGEX, script)
+                    variable = search(analyzer.regex.DANGEROUS_GITHUB_CONTEXT_VARIABLE, script)
                     if variable:
                         if self.verbose:
                             print(
@@ -120,9 +120,8 @@ class Analyzer:
                             print(
                                 f"{Colors.LIGHT_GRAY}INFO{Colors.END} step contains dangerous ACTIONS_ALLOW_UNSECURE_COMMANDS environment variable"
                             )
-
-                    passed = False
-                    return passed
+                    if passed:
+                        passed = False
         return passed
 
     def _check_for_pull_request_target(self) -> bool:
@@ -131,20 +130,19 @@ class Analyzer:
         if type(event_triggers) in (list, dict):
             if "pull_request_target" in event_triggers:
                 passed = False
-        elif type(event_triggers) == str:
+        elif isinstance(event_triggers, str):
             if event_triggers == "pull_request_target":
                 passed = False
         return passed
 
     def _check_for_remote_script(self) -> bool:
         passed = True
-        POTENTIAL_REMOTE_SCRIPT_REGEX = r"((?<=[^a-zA-Z0-9])(?:https?\:\/\/|[a-zA-Z0-9]{1,}\.{1}|\b)(?:\w{1,}\.{1}){1,5}(?:com|org|edu|gov|uk|net|ca|de|jp|fr|au|us|ru|ch|it|nl|se|no|es|mil|iq|io|ac|ly|sm){1}(?:\/[a-zA-Z0-9.]{1,})*)"
         for job in self.jobs.keys():
             steps = self.jobs[job]["steps"]
             for step in steps:
                 if "run" in step:
                     script = step["run"]
-                    variable = search(POTENTIAL_REMOTE_SCRIPT_REGEX, script)
+                    variable = search(analyzer.regex.POTENTIAL_REMOTE_SCRIPT, script)
                     if variable:
                         if self.verbose:
                             print(
@@ -155,12 +153,11 @@ class Analyzer:
 
     def _check_for_cache_action_usage(self) -> bool:
         passed = True
-        CACHE_ACTION_REGEX = r"actions\/cache@(v\d+(\.\d+)?(\.\d+)?|[a-f0-9]{40})"
         for job in self.jobs.keys():
             steps = self.jobs[job]["steps"]
             for step in steps:
                 if "uses" in step:
-                    action = search(CACHE_ACTION_REGEX, step["uses"])
+                    action = search(analyzer.regex.CACHE_ACTION, step["uses"])
                     if action:
                         if self.verbose:
                             print(
@@ -224,7 +221,7 @@ class Analyzer:
             if "strategy" in self.jobs[job] and "matrix" in self.jobs[job]["strategy"]:
                 matrix = self.jobs[job]["strategy"]["matrix"]
                 if "runner" in matrix:
-                    if type(matrix["runner"]) == list:
+                    if isinstance(matrix["runner"], list):
                         if any(runner not in default_runners for runner in matrix["runner"]):
                             passed = False
                             break
@@ -251,9 +248,6 @@ class Analyzer:
         # NOTE: if these are specifed in the configure-aws-credentials action
         # then the action will not use GitHub's OIDC provider
         # see this: https://github.com/aws-actions/configure-aws-credentials#assuming-a-role
-        CONFIGURE_AWS_CREDS_ACTION_REGEX = (
-            r"aws\-actions\/configure\-aws\-credentials@(v\d+(\.\d+)?(\.\d+)?|[a-f0-9]{40})"
-        )
         non_oidc_inputs = [
             "aws-access-key-id",
             "web-identity-token-file",
@@ -262,7 +256,7 @@ class Analyzer:
             steps = self.jobs[job]["steps"]
             for step in steps:
                 if "uses" in step:
-                    action = search(CONFIGURE_AWS_CREDS_ACTION_REGEX, step["uses"])
+                    action = search(analyzer.regex.CONFIGURE_AWS_CREDS_ACTION, step["uses"])
                     if action:
                         if any(input in non_oidc_inputs for input in step["with"]):
                             if self.verbose:
@@ -292,39 +286,45 @@ class Analyzer:
                         f"{Colors.LIGHT_GRAY}INFO{Colors.END} job('{job}') has a step that creates or approves a pull request"
                     )
 
-        GH_CLI_PR_CREATE_APPROVE_REGEX = r"gh pr (review.*--approve|create.*)"
-        GITHUB_SCRIPT_ACTION_REGEX = r"actions\/github\-script@(v\d+(\.\d+)?(\.\d+)?|[a-f0-9]{40})"
-        GITHUB_SCRIPT_CREATE_APPROVE_PR_REGEX = r".*github\.rest\.pulls\.(create\(.*|reviews\(.*APPROVE.*)"
-        CURL_CREATE_APPROVE_PR_REGEX = (
-            r".*curl.*https:\/\/api\.github\.com\/repos\/[0-9a-zA-Z-._]+\/[0-9a-zA-Z-._]+\/pulls\/[0-9]{1,}\/reviews.*"
-        )
         for job in self.jobs:
             steps = self.jobs[job]["steps"]
             for step in steps:
                 if "run" in step:
                     script = step["run"]
-                    match = search(GH_CLI_PR_CREATE_APPROVE_REGEX, script, flags=DOTALL) or search(
-                        CURL_CREATE_APPROVE_PR_REGEX, script, flags=DOTALL
+                    match = search(analyzer.regex.GH_CLI_PR_CREATE_APPROVE, script, flags=DOTALL) or search(
+                        analyzer.regex.CURL_CREATE_APPROVE_PR, script, flags=DOTALL
                     )
                     if match:
                         __print_msg(job, step)
-
                         passed = False
                 if "uses" in step:
-                    action = search(GITHUB_SCRIPT_ACTION_REGEX, step["uses"])
+                    action = search(analyzer.regex.GITHUB_SCRIPT_ACTION, step["uses"])
                     if action:
                         if "script" in step["with"]:
                             script = step["with"]["script"]
-                            match = search(GITHUB_SCRIPT_CREATE_APPROVE_PR_REGEX, script, flags=DOTALL)
+                            match = search(analyzer.regex.GITHUB_SCRIPT_CREATE_APPROVE_PR, script, flags=DOTALL)
                             if match:
                                 __print_msg(job, step)
                                 passed = False
         return passed
 
     def get_checks(self) -> list:
+        """Returns list containing available checks.
+
+        Returns:
+            list: list() of available checks.
+        """
         return [*self.checks.keys()]
 
     def run_checks(self, action: dict) -> bool:
+        """Run checks against a parsed Action YAML file as dict.
+
+        Args:
+            action (dict): the dict containing the parsed Action YAML file data.
+
+        Returns:
+            bool: True, if all checks passed, False, if any check fails.
+        """
         self.action = action
         self.jobs = self.action["jobs"]
 
