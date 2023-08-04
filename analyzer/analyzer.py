@@ -1,6 +1,7 @@
 """analyzer.py contains all the INFOic related to analyzing GitHub Actions"""
 
 from re import search, DOTALL
+from pathlib import Path
 from colors import Colors
 
 import analyzer.regex
@@ -34,8 +35,13 @@ class Analyzer:
             "_check_for_create_or_approve_pull_request": {"level": "FAIL"},
             "_check_for_remote_script": {"level": "WARN"},
         }
+        self.auxiliary_checks = [
+            "_check_for_codeowners_file",
+        ]
         self.action = {}
         self.jobs = {}
+
+        self._run_aux_checks()
 
     def _print_failed_check_msg(self, check: str, level: str):
         color = None
@@ -309,6 +315,28 @@ class Analyzer:
                                 passed = False
         return passed
 
+    # ==================================================================
+    # ======================== Auxiliary Checks ========================
+    # ==================================================================
+
+    def _check_for_codeowners_file(self) -> bool:
+        if not Path(".github/workflows/CODEOWNERS").exists():
+            print(
+                f"{Colors.LIGHT_BLUE}AUXI{Colors.END} missing CODEOWNERS file"
+                "which can provide additional protections for your workflow files"
+            )
+        else:
+            if self.verbose:
+                print(f"{Colors.LIGHT_BLUE}AUXI{Colors.END} found CODEOWNERS file")
+
+    def _run_aux_checks(self) -> None:
+        """Runs auxiliary checks which are checks for security-related
+        configurations/properties/mechanisms that contribute to more secure
+        GitHub Actions workflows.
+        """
+        for check in self.auxiliary_checks:
+            Analyzer.__dict__[check](self)
+
     def get_checks(self) -> list:
         """Returns list containing available checks.
 
@@ -344,5 +372,4 @@ class Analyzer:
                         passed_all_checks = False
             for check in fail_checks:
                 self._print_failed_check_msg(check, self.checks[check]["level"])
-
         return passed_all_checks
