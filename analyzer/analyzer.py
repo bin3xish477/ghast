@@ -31,7 +31,7 @@ class Analyzer:
             "_check_for_script_injection": {"level": "FAIL"},
             "_check_for_self_hosted_runners": {"level": "WARN"},
             "_check_for_aws_configure_credentials_non_oidc": {"level": "WARN"},
-            "_check_for_pull_request_create_or_approve": {"level": "FAIL"},
+            "_check_for_create_or_approve_pull_request": {"level": "FAIL"},
             "_check_for_remote_script": {"level": "WARN"},
         }
         self.action = {}
@@ -273,7 +273,7 @@ class Analyzer:
                             passed = False
         return passed
 
-    def _check_for_pull_request_create_or_approve(self) -> bool:
+    def _check_for_create_or_approve_pull_request(self) -> bool:
         passed = True
 
         def __print_msg(job: str, step: dict):

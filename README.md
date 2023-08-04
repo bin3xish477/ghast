@@ -87,7 +87,7 @@ jobs:
 
     - This checks looks for the usage of AWS's `aws-actions/configure-aws-credentials` action and attempts to identify non-OIDC authentication parameters. Non-OIDC authentication types are less secure than OIDC because they require the creation of long-term credentials which can be compromised, however, OIDC tokens are short-lived and are usually scoped to only the permissions that are essential to a workflow and thus help reduce the attack surface.
 
-10. Name: `check_for_pull_request_create_or_approve`, Level: `WARN`
+10. Name: `check_for_create_or_approve_pull_request`, Level: `WARN`
 
     - This check looks for Action that have logic related to creating or improving pull requests. Creating or approving pull requests via automation poses a security risk if sufficient controls aren't in place to protect against malicious code being merged into a repository.
 
