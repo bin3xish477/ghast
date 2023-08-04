@@ -1,6 +1,7 @@
 """analyzer.py contains all the INFOic related to analyzing GitHub Actions"""
 
 from re import search, DOTALL
+from pathlib import Path
 from colors import Colors
 
 import analyzer.regex
@@ -36,6 +37,7 @@ class Analyzer:
         }
         self.action = {}
         self.jobs = {}
+        self._run_aux_checks()
 
     def _print_failed_check_msg(self, check: str, level: str):
         color = None
@@ -316,6 +318,17 @@ class Analyzer:
             list: list() of available checks.
         """
         return [*self.checks.keys()]
+
+    def _run_aux_checks(self) -> None:
+        """Runs auxiliary checks which are checks for security-related
+        configurations/properties/mechanisms that contribute to more secure
+        GitHub Actions workflows.
+        """
+        if not Path(".github/workflows/CODEOWNERS").exists():
+            print(
+                f"{Colors.LIGHT_GRAY}INFO{Colors.END}({Colors.LIGHT_BLUE}AUX{Colors.END}) "
+                "missing CODEOWNERS file which can provide additional protections for your workflow files"
+            )
 
     def run_checks(self, action: dict) -> bool:
         """Run checks against a parsed Action YAML file as dict.
