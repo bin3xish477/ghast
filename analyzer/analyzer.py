@@ -350,6 +350,9 @@ class Analyzer:
         configurations/properties/mechanisms that contribute to more secure
         GitHub Actions workflows.
         """
+        # TODO:
+        # - Add check for missing SECURITY.md file
+        # - Add check for missing dockerignore/gitignore file with missing sensitive file based on programming language detected
         for check in self.auxiliary_checks:
             Analyzer.__dict__[check](self)
 
