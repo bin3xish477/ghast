@@ -1,58 +1,57 @@
-name: 'actions-security-analyzer'
-description: 'Scan your GitHub actions folder for common security vulnerabilities'
-author: 'bin3xish477'
+name: "actions-security-analyzer"
+description: "Scan your GitHub actions folder for common security vulnerabilities"
+author: "bin3xish477"
 branding:
-  icon: 'shield'
-  color: 'green'
+  icon: "shield"
+  color: "green"
 inputs:
   dir:
-    description: 'path to directory with GitHub Actions files to scan'
+    description: "path to directory with GitHub Actions files to scan"
     required: false
-    default: './.github/workflows'
+    default: "./.github/workflows"
   ignore-checks:
-    description: 'specify checks to ignore'
+    description: "specify checks to ignore"
     required: false
   ignore-warnings:
-    description: 'ignore checks labeled as WARN'
+    description: "ignore checks labeled as WARN"
     required: false
   no-summary:
     description: "don't show tool summary in output"
     required: false
   verbose:
-    description: 'enable verbose output'
+    description: "enable verbose output"
     required: false
 runs:
   using: composite
   steps:
-  - uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
-    with:
-      python-version: '3.11' 
-  - run: |
-      pip install actions-security-analyzer
-      args=()
+    - uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
+      with:
+        python-version: "3.11"
+    - run: |
+        pip install ghast-scanner
+        args=()
 
-      dir=$( echo ${{ inputs.dir }} | tr '[:upper:]' '[:lower:]')
-      ignore_warnings=$( echo ${{ inputs.ignore-warnings }} | tr '[:upper:]' '[:lower:]')
-      ignore_checks=$( echo ${{ inputs.ignore-checks }} | tr '[:upper:]' '[:lower:]')
-      no_summary=$( echo ${{ inputs.no-summary }} | tr '[:upper:]' '[:lower:]')
-      verbose=$( echo ${{ inputs.verbose }} | tr '[:upper:]' '[:lower:]')
+        dir=$( echo ${{ inputs.dir }} | tr '[:upper:]' '[:lower:]')
+        ignore_warnings=$( echo ${{ inputs.ignore-warnings }} | tr '[:upper:]' '[:lower:]')
+        ignore_checks=$( echo ${{ inputs.ignore-checks }} | tr '[:upper:]' '[:lower:]')
+        no_summary=$( echo ${{ inputs.no-summary }} | tr '[:upper:]' '[:lower:]')
+        verbose=$( echo ${{ inputs.verbose }} | tr '[:upper:]' '[:lower:]')
 
-      [ ! -z $dir ] && args+=('--dir', ${{ inputs.dir }})
-      [ ! -z $ignore_warnings ] && [[ $ignore_warnings != "false" ]] && args+=('--ignore-warnings')
-      [ ! -z $no_summary ] && [[ $no_summary != "false" ]] && args+=('--no-summary')
-      [ ! -z $verbose ] && [[ $verbose != "false" ]] && args+=('--verbose')
+        [ ! -z $dir ] && args+=('--dir', ${{ inputs.dir }})
+        [ ! -z $ignore_warnings ] && [[ $ignore_warnings != "false" ]] && args+=('--ignore-warnings')
+        [ ! -z $no_summary ] && [[ $no_summary != "false" ]] && args+=('--no-summary')
+        [ ! -z $verbose ] && [[ $verbose != "false" ]] && args+=('--verbose')
 
-      if [[ ! -z "$ignore_checks" ]]; then
-        checks=()
-        for check in $(echo $ignore_checks)
-        do
-          checks+=("$check")
-        done
-        args+=('--ignore-checks', ${checks[@]/,/ })
-      fi
+        if [[ ! -z "$ignore_checks" ]]; then
+          checks=()
+          for check in $(echo $ignore_checks)
+          do
+            checks+=("$check")
+          done
+          args+=('--ignore-checks', ${checks[@]/,/ })
+        fi
 
-      echo "ARGS: ${args[@]/,/ }"
-      asa ${args[@]/,/ }
+        echo "ARGS: ${args[@]/,/ }"
+        ghast ${args[@]/,/ }
 
-    shell: bash
-
+      shell: bash

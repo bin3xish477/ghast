@@ -9,7 +9,7 @@ GHAST (GitHub Actions Static Analysis Tool) is a tool to analyze the security po
 > Make sure you have `$HOME/.local/bin` in your PATH
 
 ```
-pip install ghast
+pip install ghast-scanner
 ```
 
 ### Usage
