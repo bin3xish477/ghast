@@ -1,4 +1,4 @@
-name: "actions-security-analyzer"
+name: "ghast"
 description: "Scan your GitHub actions folder for common security vulnerabilities"
 author: "bin3xish477"
 branding:
