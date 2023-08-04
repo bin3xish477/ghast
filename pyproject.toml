@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "actions-security-analyzer"
+name = "ghast"
 dynamic = ["version"]
-description = 'Analyze the security posture of one or more GitHub Actions'
+description = 'Analyze the security posture of your GitHub Actions'
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
@@ -33,12 +33,12 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/bin3xish477/asa#readme"
-Issues = "https://github.com/bin3xish477/asa/issues"
-Source = "https://github.com/bin3xish477/asa"
+Documentation = "https://github.com/bin3xish477/ghast#readme"
+Issues = "https://github.com/bin3xish477/ghast/issues"
+Source = "https://github.com/bin3xish477/ghast"
 
 [project.scripts]
-asa = "main:_main"
+ghast = "main:_main"
 
 [tool.hatch.version]
 path = "__about__.py"
@@ -71,7 +71,7 @@ dependencies = [
   "ruff>=0.0.243",
 ]
 [tool.hatch.envs.lint.scripts]
-typing = "mypy --install-types --non-interactive {args:src/asa tests}"
+typing = "mypy --install-types --non-interactive {args:src/ghast tests}"
 style = [
   "ruff {args:.}",
   "black --check --diff {args:.}",
@@ -137,7 +137,7 @@ unfixable = [
 ]
 
 [tool.ruff.isort]
-known-first-party = ["asa"]
+known-first-party = ["ghast"]
 
 [tool.ruff.flake8-tidy-imports]
 ban-relative-imports = "all"
@@ -147,7 +147,7 @@ ban-relative-imports = "all"
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
 
 [tool.coverage.run]
-source_pkgs = ["asa", "tests"]
+source_pkgs = ["ghast", "tests"]
 branch = true
 parallel = true
 omit = [
@@ -155,8 +155,8 @@ omit = [
 ]
 
 [tool.coverage.paths]
-asa = ["src/asa", "*/asa/src/asa"]
-tests = ["tests", "*/asa/tests"]
+ghast = ["src/ghast", "*/ghast/src/ghast"]
+tests = ["tests", "*/ghast/tests"]
 
 [tool.coverage.report]
 exclude_lines = [

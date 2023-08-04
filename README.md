@@ -1,31 +1,32 @@
-# asa
-asa (actions-security-analzyer) is a tool to analyze the security posture of your GitHub Actions.
+# ghast
 
-![asa-stdout](/images/asa-stdout.png)
+GHAST (GitHub Actions Static Analysis Tool) is a tool to analyze the security posture of your GitHub Actions.
+
+![ghast-stdout](/images/ghast-stdout.png)
 
 ### Installation
 
 > Make sure you have `$HOME/.local/bin` in your PATH
 
 ```
-pip install actions-security-analzyer
+pip install ghast
 ```
 
 ### Usage
 
 ```
-asa --file action.yml
-asa -d directory-with-actions/ --verbose
-asa --file action.yml --ignore-warnings
-asa --list-checks
+ghast --file action.yml
+ghast -d directory-with-actions/ --verbose
+ghast --file action.yml --ignore-warnings
+ghast --list-checks
 ```
 
-### Use `asa` in Your GitHub Workflows
+### Use `ghast` in Your GitHub Workflows
 
 #### Example
 
 ```yaml
-name: 'RunActionsSecurityAnalzyer'
+name: 'RunGhast'
 on:
   push:
     branches:
@@ -34,13 +35,13 @@ on:
     paths:
       - '.github/workflows/**'
 jobs:
-  RunAsa:
+  RunGhast:
     runs-on: ubuntu-latest
     steps:
     - name: "Checkout repo"
       uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
-    - name: "Run asa scanner"
-      uses: "bin3xish477/asa@ee733379e314d44f1a960a70339ee5e5d19e404d"
+    - name: "Run Ghast"
+      uses: "bin3xish477/ghast@ee733379e314d44f1a960a70339ee5e5d19e404d"
       with:
         dir: "./actions/"
         verbose: true
@@ -48,7 +49,7 @@ jobs:
         ignore-checks: 'check_for_inline_script check_for_cache_action_usage'
 ```
 
-### Checks Performed by `asa`
+### Checks Performed by `ghast`
 
 1. Name: `check_for_3p_actions_without_hash`, Level: `FAIL`
 
@@ -68,7 +69,7 @@ jobs:
 
 5. Name: `check_for_inline_script`, Level: `WARN`
 
-    - This check simply warns that you're using an inline script instead of GitHub Action. Inline scripts are susceptible to script injection attacks (another check covered by `asa`). It is recommended to write an action and pass any required context values as inputs to that action which removes script injection vector because action input are properly treated as arguments and are not evaluated as part of a script.
+    - This check simply warns that you're using an inline script instead of GitHub Action. Inline scripts are susceptible to script injection attacks (another check covered by `ghast`). It is recommended to write an action and pass any required context values as inputs to that action which removes script injection vector because action input are properly treated as arguments and are not evaluated as part of a script.
 
 6. Name: `check_for_pull_request_target`, Level: `FAIL`
 
