@@ -96,7 +96,9 @@ def _main():
                         f"Scanning {Colors.UNDERLINE}{dir_}{Colors.END} directory..."
                     )
                 for action in dir_.iterdir():
-                    print(f"File: {Colors.BOLD}{str(action).rsplit(sep, maxsplit=1)[-1]}{Colors.END}")
+                    print(
+                        f"FILE => {Colors.BOLD}{Colors.UNDERLINE}{str(action).rsplit(sep, maxsplit=1)[-1]}{Colors.END}"
+                    )
                     if action.is_file and action.suffix in (".yml", ".yaml"):
                         with action.open("r") as action_file:
                             action_dict = safe_load(action_file)

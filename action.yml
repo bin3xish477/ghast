@@ -1,5 +1,5 @@
 name: "ghast-scanner"
-description: "Scan your GitHub actions folder for common security vulnerabilities"
+description: "Scan your GitHub actions and environment for common security vulnerabilities"
 author: "bin3xish477"
 branding:
   icon: "shield"
