@@ -35,15 +35,16 @@ class Analyzer:
             "_check_for_remote_script": {"level": "WARN"},
         }
         self.action = {}
+        self.jobs = {}
 
     def _print_failed_check_msg(self, check: str, level: str):
-        c = None
+        color = None
         if level == "FAIL":
-            c = Colors.RED
+            color = Colors.RED
         elif level == "WARN":
-            c = Colors.LIGHT_GREEN
+            color = Colors.LIGHT_GREEN
         print(
-            f"{c}{level}{Colors.END} {Colors.YELLOW}{check[1:]}{Colors.END}",
+            f"{color}{level}{Colors.END} {Colors.YELLOW}{check[1:]}{Colors.END}",
         )
 
     def _action_has_required_elements(self) -> bool:
@@ -331,7 +332,7 @@ class Analyzer:
         passed_all_checks = True
         fail_checks = []
         if self._action_has_required_elements():
-            for check in self.checks.keys():
+            for check in self.checks:
                 if self.ignore_warnings:
                     if self.checks[check]["level"] == "WARN":
                         continue

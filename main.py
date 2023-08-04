@@ -2,12 +2,12 @@
 from argparse import ArgumentParser
 from pathlib import Path
 from os import sep
+import sys
+
 from yaml.resolver import Resolver
 from yaml import safe_load
 from analyzer.analyzer import Analyzer
 from colors import Colors
-
-import sys
 
 FAILED = 1
 SUCCESS = 0
@@ -15,12 +15,12 @@ SUCCESS = 0
 
 # reference: https://stackoverflow.com/a/36470466
 def _rewrite_pyyaml_boolean_recognition_rules():
-    for ch in "OoYyNn":
-        if len(Resolver.yaml_implicit_resolvers[ch]) == 1:
-            del Resolver.yaml_implicit_resolvers[ch]
+    for char in "OoYyNn":
+        if len(Resolver.yaml_implicit_resolvers[char]) == 1:
+            del Resolver.yaml_implicit_resolvers[char]
         else:
-            Resolver.yaml_implicit_resolvers[ch] = [
-                x for x in Resolver.yaml_implicit_resolvers[ch] if x[0] != "tag:yaml.org,2002:bool"
+            Resolver.yaml_implicit_resolvers[char] = [
+                x for x in Resolver.yaml_implicit_resolvers[char] if x[0] != "tag:yaml.org,2002:bool"
             ]
 
 
