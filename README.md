@@ -22,7 +22,7 @@ ghast --file action.yml
 ghast -d directory-with-actions/ --verbose
 ghast --file action.yml --ignore-warnings
 ghast --list-checks
-ghast -k check_for_inline_script --no-summary
+ghast -i check_for_inline_script --no-summary
 ```
 
 ### Use `ghast` in Your GitHub Workflows
