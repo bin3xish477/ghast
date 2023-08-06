@@ -28,6 +28,8 @@ ghast -i check_for_inline_script --no-summary	# only run a specific check and do
 #### See how it works
 [![asciicast](https://asciinema.org/a/OzhmnaNq1DamPL6JNlPY1Q7gz.svg)](https://asciinema.org/a/OzhmnaNq1DamPL6JNlPY1Q7gz)
 
+<script async id="asciicast-OzhmnaNq1DamPL6JNlPY1Q7gz" src="https://asciinema.org/a/OzhmnaNq1DamPL6JNlPY1Q7gz.js"></script>
+
 ### Use `ghast` in Your GitHub Workflows
 
 #### Default Workflow
