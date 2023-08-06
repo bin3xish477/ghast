@@ -78,7 +78,7 @@ def _main():
         if file_:
             file_ = Path(file_)
             if file_.exists():
-                print(f"FILE: {Colors.BOLD}{file_}{Colors.END}")
+                print(f"FILE => {Colors.BOLD}{file_}{Colors.END}")
                 with file_.open("r") as action_file:
                     action_dict = safe_load(action_file)
                     if not analyzer.run_checks(action=action_dict):
