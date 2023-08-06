@@ -27,7 +27,7 @@ ghast --file action.yml --ignore-warnings	# scan a specific workflow file and ig
 ghast --list-checks				# list all known checks
 ghast -i check_for_inline_script --no-summary	# only run a specific check and don't show tool summary
 ```
-#### See how it works
+#### See how the Ghast CLI works
 <a href="https://asciinema.org/a/600891?autoplay=1" width="400" target="_blank"><img src="https://asciinema.org/a/600891.svg" /></a>
 
 ### Use `ghast` in Your GitHub Workflows
