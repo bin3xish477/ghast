@@ -35,6 +35,7 @@ class Analyzer:
             "_check_for_aws_configure_credentials_non_oidc": {"level": "WARN"},
             "_check_for_create_or_approve_pull_request": {"level": "FAIL"},
             "_check_for_remote_script": {"level": "WARN"},
+            "_check_for_non_github_managed_actions": {"level": "WARN"},
         }
         self.auxiliary_checks = [
             "_check_for_codeowners_file",
@@ -344,6 +345,20 @@ class Analyzer:
         else:
             if self.verbose:
                 print(f"{Colors.LIGHT_BLUE}AUXI{Colors.END} found CODEOWNERS file")
+
+    def _check_for_non_github_managed_actions(self) -> bool:
+        passed = True
+        for job in self.jobs:
+            for step in self.jobs[job]["steps"]:
+                if "uses" in step:
+                    action = step["uses"].strip()
+                    if not search(analyzer.regex.GITHUB_MANAGED_ACTION, action):
+                        if self.verbose:
+                            print(
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} using non GitHub-managed action('{action}') - make sure its safe to use!"
+                            )
+                        passed = False
+        return passed
 
     def _run_aux_checks(self) -> None:
         """Runs auxiliary checks which are checks for security-related

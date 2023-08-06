@@ -15,3 +15,4 @@ GITHUB_SCRIPT_CREATE_APPROVE_PR = r".*github\.rest\.pulls\.(create\(.*|reviews\(
 CURL_CREATE_APPROVE_PR = (
     r".*curl.*https:\/\/api\.github\.com\/repos\/[0-9a-zA-Z-._]+\/[0-9a-zA-Z-._]+\/pulls\/[0-9]{1,}\/reviews.*"
 )
+GITHUB_MANAGED_ACTION = r"^actions\/.*"

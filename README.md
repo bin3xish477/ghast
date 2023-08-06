@@ -50,7 +50,7 @@ jobs:
 
 1. Name: `check_for_3p_actions_without_hash`, Level: `FAIL`
 
-    - This check identifies any third-party GitHub Actions in use that have been referenced via a version number such as `v1.1` instead of commit SHA haah. Using a hash can help mitigate supply chain threats in a scenario where a threat actor has compromised the source repository where the 3P action lives.
+    - This check identifies any third party GitHub Actions in use that have been referenced via a version number such as `v1.1` instead of commit SHA haah. Using a hash can help mitigate supply chain threats in a scenario where a threat actor has compromised the source repository where the 3P action lives.
 
 2. Name: `check_for_allow_unsecure_commands`, Level: `FAIL`
 
@@ -95,6 +95,10 @@ jobs:
 12. Name: `check_for_upload_download_artifact_action`, Level: `WARN`
 
     - This check is essential for identifying any usage of GitHub's upload/download artifact Action, as it can potentially expose your workflow to compromised files. For instance, an uploaded artifact might contain a compiled binary from a previous workflow, but this binary could be compromised due to the introduction of malicious dependencies during the compilation phase. Consequently, if this tainted binary is executed within another workflow, it could lead to significant security risks. To mitigate such risks, it is crucial for users to conduct integrity checks on artifacts before consumption. This check serves as a valuable reminder to reinforce this security practice.
+
+13. Name: `check_for_non_github_managed_actions`, Level: `WARN`
+
+    - This check looks for inclusion of non GitHub-managed actions and serves as a reminder to review the security posture of any third party actions you include in your workflow(s), especially if they are not developed and maintained by credible entities.
 
 #### Auxiliary Checks
 
