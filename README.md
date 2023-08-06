@@ -26,9 +26,7 @@ ghast --list-checks				# list all known checks
 ghast -i check_for_inline_script --no-summary	# only run a specific check and don't show tool summary
 ```
 #### See how it works
-[![asciicast](https://asciinema.org/a/OzhmnaNq1DamPL6JNlPY1Q7gz.svg)](https://asciinema.org/a/OzhmnaNq1DamPL6JNlPY1Q7gz)
-
-<script async id="asciicast-OzhmnaNq1DamPL6JNlPY1Q7gz" src="https://asciinema.org/a/OzhmnaNq1DamPL6JNlPY1Q7gz.js"></script>
+<a href="https://asciinema.org/a/600891?autoplay=1" target="_blank"><img src="https://asciinema.org/a/600891.svg" /></a>
 
 ### Use `ghast` in Your GitHub Workflows
 
