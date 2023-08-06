@@ -1,13 +1,13 @@
 # ghast
 
-<p align="center"><img width="700" alt="image" src="https://github.com/bin3xish477/ghast/assets/44281620/098a4d56-4edc-4e20-b463-923c8baf0418"></p>
+<p align="center"><img width="400" alt="image" src="https://github.com/bin3xish477/ghast/assets/44281620/098a4d56-4edc-4e20-b463-923c8baf0418"></p>
 
-GHAST (GitHub Actions Static Analysis Tool) is a tool to analyze the security posture of your GitHub Actions and its surronding environment for common security vulnerabilities or missing security configuration.
+Ghast (GitHub Actions Static Analysis Tool) is a tool to analyze the security posture of your GitHub Actions and its surrounding environment for common security vulnerabilities and/or missing security configuration.  You can use Ghast as a stand-alone analysis tool via the CLI or by running Ghast as a native GitHub Action.
 
 <p align="center"><img width="936" alt="image" src="https://github.com/bin3xish477/ghast/assets/44281620/721432ca-7944-40b4-803d-8c3cb866996e"></p>
 
 
-### Installation
+### Install the CLI
 
 > Make sure you have `$HOME/.local/bin` in your PATH
 
@@ -15,8 +15,24 @@ GHAST (GitHub Actions Static Analysis Tool) is a tool to analyze the security po
 python3 -m pip install .
 ```
 
-### Usage
+### How to use the CLI
+```
+usage: ghast [-h] [--file FILE] [--dir DIR] [--list-checks] [--verbose] [--ignore-warnings] [--ignore-checks CHECK [CHECK ...]] [--no-summary]
 
+options:
+  -h, --help            show this help message and exit
+  --file FILE, -f FILE  path to GitHub Action .yaml|.yml file
+  --dir DIR, -d DIR     path to directory with GitHub Action .yaml|.yml files
+  --list-checks, -l     list all checks performed against provided GitHub Action
+  --verbose, -v         increase tool verbosity
+  --ignore-warnings, -i
+                        ignore checks labeled as warning
+  --ignore-checks CHECK [CHECK ...], -k CHECK [CHECK ...]
+                        specify checks to ignore
+  --no-summary, -n      don't show tool summary section
+```
+
+### Some examples of the CLI
 ```
 ghast --file action.yml
 ghast -d directory-with-actions/ --verbose
@@ -25,7 +41,7 @@ ghast --list-checks
 ghast -i check_for_inline_script --no-summary
 ```
 
-### Use `ghast` in Your GitHub Workflows
+### Use `Ghast` in Your GitHub Workflows
 
 #### Default Workflow
 
