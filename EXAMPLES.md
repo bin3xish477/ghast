@@ -59,10 +59,10 @@ jobs:
     - name: "Run Ghast"
       uses: "bin3xish477/ghast@ee733379e314d44f1a960a70339ee5e5d19e404d"
       with:
-        dir: "./actions/"
+        dir: ".github/workflows/my_workflows/"
 ```
 
-#### Run in verbose mode and don't show tool summary section
+#### Run in verbose mode, don't show tool summary section, and ignore checks labeled as warning
 
 ```yaml
 name: 'RunGhast'
@@ -79,6 +79,7 @@ jobs:
       with:
         verbose: true
         no-summary: true
+        ignore-warnings: true
 ```
 
 #### The kitchen sink...
@@ -101,7 +102,7 @@ jobs:
     - name: "Run Ghast"
       uses: "bin3xish477/ghast@ee733379e314d44f1a960a70339ee5e5d19e404d"
       with:
-        dir: "./actions/"
+        dir: ".github/workflows/my_workflows/"
         verbose: true
         no-summary: true
         ignore-checks: 'check_for_inline_script check_for_cache_action_usage'
