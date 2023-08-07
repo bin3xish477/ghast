@@ -336,11 +336,11 @@ class Analyzer:
     # ======================== Auxiliary Checks ========================
     # ==================================================================
 
-    def _check_for_codeowners_file(self) -> bool:
+    def _check_for_codeowners_file(self) -> None:
         if not Path(".github/workflows/CODEOWNERS").exists():
             print(
                 f"{Colors.LIGHT_BLUE}AUXI{Colors.END} missing CODEOWNERS file"
-                "which can provide additional protections for your workflow files"
+                " which can provide additional protections for your workflow files"
             )
         else:
             if self.verbose:

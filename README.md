@@ -13,7 +13,16 @@ The actions directory has some example GitHub Actions with vulnerable steps that
 
 > Make sure you have `$HOME/.local/bin` in your PATH
 
+#### Using Pip
+
 ```
+pip install ghast-scanner
+```
+
+#### With Git/Python
+
+```
+git clone https://github.com/bin3xish477/ghast.git
 python3 -m pip install .
 ```
 
