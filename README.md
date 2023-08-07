@@ -1,13 +1,15 @@
 # ghast
 
-<p align="center"><img width="700" alt="image" src="https://github.com/bin3xish477/ghast/assets/44281620/098a4d56-4edc-4e20-b463-923c8baf0418"></p>
+<p align="center"><img width="400" alt="image" src="https://github.com/bin3xish477/ghast/assets/44281620/098a4d56-4edc-4e20-b463-923c8baf0418"></p>
 
-GHAST (GitHub Actions Static Analysis Tool) is a tool to analyze the security posture of your GitHub Actions and its surronding environment for common security vulnerabilities or missing security configuration.
+Ghast (GitHub Actions Static Analysis Tool) is a tool to analyze the security posture of your GitHub Actions and its surrounding environment for common security vulnerabilities and/or missing security configuration.  You can use Ghast as a stand-alone analysis tool via the Ghast CLI or by running Ghast as a native GitHub Action.
+
+The actions directory has some example GitHub Actions with vulnerable steps that you can use to test.
 
 <p align="center"><img width="936" alt="image" src="https://github.com/bin3xish477/ghast/assets/44281620/721432ca-7944-40b4-803d-8c3cb866996e"></p>
 
 
-### Installation
+### Install the Ghast CLI
 
 > Make sure you have `$HOME/.local/bin` in your PATH
 
@@ -15,15 +17,19 @@ GHAST (GitHub Actions Static Analysis Tool) is a tool to analyze the security po
 python3 -m pip install .
 ```
 
-### Usage
+### How to use the Ghast CLI
 
 ```
-ghast --file action.yml
-ghast -d directory-with-actions/ --verbose
-ghast --file action.yml --ignore-warnings
-ghast --list-checks
-ghast -i check_for_inline_script --no-summary
+ghast -h 					# get help 
+ghast --file action.yml 			# scan a specific workflow file
+ghast -d directory-with-actions/ --verbose	# scan a directory in verbose mode
+ghast --file action.yml --ignore-warnings	# scan a specific workflow file and ignore warnings
+ghast --list-checks				# list all known checks
+ghast -i check_for_inline_script --no-summary	# only run a specific check and don't show tool summary
 ```
+
+#### See how the Ghast CLI works
+<a href="https://asciinema.org/a/600891?autoplay=1" width="400" target="_blank"><img src="https://asciinema.org/a/600891.svg" /></a>
 
 ### Use `ghast` in Your GitHub Workflows
 
