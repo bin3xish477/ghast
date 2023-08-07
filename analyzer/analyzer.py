@@ -77,8 +77,8 @@ class Analyzer:
                             print(
                                 f"{Colors.LIGHT_GRAY}INFO{Colors.END} step using action('{uses}') with version number instead of a SHA hash"
                             )
-                        passed = False
-                        break
+                        if passed:
+                            passed = False
         return passed
 
     def _check_for_inline_script(self) -> bool:
