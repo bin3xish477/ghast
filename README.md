@@ -56,8 +56,6 @@ jobs:
       uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # v3.5.3
     - name: "Run Ghast"
       uses: "bin3xish477/ghast@43c471b8e05599d67f618ecccfc8d7b9281bfd9b"
-      with:
-        dir: '.github/workflows/'
 ```
 
 ### See Additional Workflow Examples
