@@ -39,6 +39,7 @@ class Analyzer:
         }
         self.auxiliary_checks = [
             "_check_for_codeowners_file",
+            "_check_for_missing_security_md_file",
         ]
         self.action = {}
         self.jobs = {}
@@ -332,20 +333,6 @@ class Analyzer:
                                 passed = False
         return passed
 
-    # ==================================================================
-    # ======================== Auxiliary Checks ========================
-    # ==================================================================
-
-    def _check_for_codeowners_file(self) -> None:
-        if not Path(".github/workflows/CODEOWNERS").exists():
-            print(
-                f"{Colors.LIGHT_BLUE}AUXI{Colors.END} missing CODEOWNERS file"
-                " which can provide additional protections for your workflow files"
-            )
-        else:
-            if self.verbose:
-                print(f"{Colors.LIGHT_BLUE}AUXI{Colors.END} found CODEOWNERS file")
-
     def _check_for_non_github_managed_actions(self) -> bool:
         passed = True
         for job in self.jobs:
@@ -360,13 +347,37 @@ class Analyzer:
                         passed = False
         return passed
 
+    # ==================================================================
+    # ======================== Auxiliary Checks ========================
+    # ==================================================================
+
+    def _check_for_codeowners_file(self) -> None:
+        if not Path(".github/workflows/CODEOWNERS").exists():
+            print(
+                f"{Colors.LIGHT_BLUE}AUXI{Colors.END} missing CODEOWNERS file"
+                " which can provide additional protections for your workflow files."
+            )
+        else:
+            if self.verbose:
+                print(f"{Colors.LIGHT_BLUE}AUXI{Colors.END} found CODEOWNERS file!")
+
+    def _check_for_missing_security_md_file(self) -> None:
+        security_md = 'SECURITY.md'
+        if not Path(security_md).exists() or not Path(security_md.lower()).exists():
+            print(
+                f"{Colors.LIGHT_BLUE}AUXI{Colors.END} missing SECURITY.md file"
+                " which is crucial for researchers looking to report a finding."
+            )
+        else:
+            if self.verbose:
+                print(f"{Colors.LIGHT_BLUE}AUXI{Colors.END} found SECURITY.md file!")
+
     def _run_aux_checks(self) -> None:
         """Runs auxiliary checks which are checks for security-related
         configurations/properties/mechanisms that contribute to more secure
         GitHub Actions workflows.
         """
         # TODO:
-        # - Add check for missing SECURITY.md file
         # - Add check for missing dockerignore/gitignore file with missing sensitive file based on programming language detected
         for check in self.auxiliary_checks:
             Analyzer.__dict__[check](self)
