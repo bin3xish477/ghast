@@ -38,7 +38,7 @@ class Analyzer:
             "_check_for_non_github_managed_actions": {"level": "WARN"},
         }
         self.auxiliary_checks = [
-            "_check_for_codeowners_file",
+            "_check_for_missing_codeowners_file",
             "_check_for_missing_security_md_file",
         ]
         self.action = {}
@@ -351,7 +351,7 @@ class Analyzer:
     # ======================== Auxiliary Checks ========================
     # ==================================================================
 
-    def _check_for_codeowners_file(self) -> None:
+    def _check_for_missing_codeowners_file(self) -> None:
         if not Path(".github/workflows/CODEOWNERS").exists():
             print(
                 f"{Colors.LIGHT_BLUE}AUXI{Colors.END} missing CODEOWNERS file"

@@ -117,7 +117,8 @@ jobs:
 
 #### Auxiliary Checks
 
-1. Name: `check_for_codeowners_file` - checks for existence of [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) file.
+1. Name: `check_for_missing_codeowners_file` - checks for missing [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) file.
+1. Name: `check_for_missing_security_md_file` - checks for missing [SECURITY.md](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) file.
 
 ### References
 
