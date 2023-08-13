@@ -118,7 +118,9 @@ jobs:
 #### Auxiliary Checks
 
 1. Name: `check_for_missing_codeowners_file` - checks for missing [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) file.
-1. Name: `check_for_missing_security_md_file` - checks for missing [SECURITY.md](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) file.
+2. Name: `check_for_missing_security_md_file` - checks for missing [SECURITY.md](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) file.
+3. Name: `check_for_missing_gitignore_file` - check for missing [gitignore](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files) file.
+4. Name: `check_for_missing_dockerignore_file` - check for missing [dockerignore](https://docs.docker.com/engine/reference/builder/#dockerignore-file) file.
 
 ### References
 

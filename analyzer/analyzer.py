@@ -40,6 +40,8 @@ class Analyzer:
         self.auxiliary_checks = [
             "_check_for_missing_codeowners_file",
             "_check_for_missing_security_md_file",
+            "_check_for_missing_gitignore_file",
+            "_check_for_missing_dockerignore_file",
         ]
         self.action = {}
         self.jobs = {}
@@ -372,13 +374,38 @@ class Analyzer:
             if self.verbose:
                 print(f"{Colors.LIGHT_BLUE}AUXI{Colors.END} found SECURITY.md file!")
 
+    def _check_for_missing_gitignore_file(self) -> None:
+        if not Path('.gitignore').exists():
+            print(
+                f"{Colors.LIGHT_BLUE}AUXI{Colors.END} missing .gitignore file - make sure you aren't commiting any sensitive folders/files."
+            )
+        else:
+            if self.verbose:
+                print(f"{Colors.LIGHT_BLUE}AUXI{Colors.END} found .gitignore file!")
+
+    def _check_for_missing_dockerignore_file(self) -> None:
+        using_docker = False
+        for f in Path(".").iterdir():
+            if f.is_file():
+                if f.suffix == ".dockerfile":
+                    using_docker = True
+                elif f == "Dockerfile":
+                    using_docker = True
+        if using_docker:
+            if not Path(".dockerignore").exists():
+                print(
+                    f"{Colors.LIGHT_BLUE}AUXI{Colors.END} missing .dockerignore file - make sure you aren't commiting any sensitive folders/files into your containerized apps."
+                )
+            else:
+                if self.verbose:
+                    print(f"{Colors.LIGHT_BLUE}AUXI{Colors.END} found .dockerignore file!")
+
     def _run_aux_checks(self) -> None:
         """Runs auxiliary checks which are checks for security-related
         configurations/properties/mechanisms that contribute to more secure
         GitHub Actions workflows.
         """
         # TODO:
-        # - Add check for missing dockerignore/gitignore file with missing sensitive file based on programming language detected
         for check in self.auxiliary_checks:
             Analyzer.__dict__[check](self)
 
