@@ -1,6 +1,6 @@
 # ghast
 
-<p align="center"><img width="400" alt="image" src="https://github.com/bin3xish477/ghast/assets/44281620/098a4d56-4edc-4e20-b463-923c8baf0418"></p>
+<p align="center"><img width="600" alt="image" src="https://github.com/bin3xish477/ghast/assets/44281620/d89e461d-8093-4aaf-85b0-da1af89eb3ba"></p>
 
 Ghast (GitHub Actions Static Analysis Tool) is a tool to analyze the security posture of your GitHub Actions and its surrounding environment for common security vulnerabilities and/or missing security configuration.  You can use Ghast as a stand-alone analysis tool via the Ghast CLI or by running Ghast as a native GitHub Action.
 
