@@ -44,6 +44,7 @@ class Analyzer:
             "_check_for_missing_dockerignore_file",
         ]
         self.action = {}
+        self.has_jobs = None
         self.jobs = {}
 
         self._run_aux_checks()
@@ -58,21 +59,22 @@ class Analyzer:
             f"{color}{level}{Colors.END} {Colors.YELLOW}{check[1:]}{Colors.END}",
         )
 
-    def _action_has_required_elements(self) -> bool:
-        passed = True
-        # NOTE: a check for "permissions" is not done here because it is not required
-        if not all(key in self.action for key in ["name", "on", "jobs"]):
-            passed = False
-        for job in self.jobs.keys():
-            if "steps" not in self.jobs[job]:
-                passed = False
-                break
-        return passed
-
     def _check_for_3p_actions_without_hash(self) -> bool:
         passed = True
-        for job in self.jobs.keys():
-            for step in self.jobs[job]["steps"]:
+        if self.has_jobs:
+            for job in self.jobs.keys():
+                for step in self.jobs[job]["steps"]:
+                    if "uses" in step:
+                        uses = step["uses"]
+                        if search(analyzer.regex.ACTION_WITH_VERSION, uses):
+                            if self.verbose:
+                                print(
+                                    f"{Colors.LIGHT_GRAY}INFO{Colors.END} step using action('{uses}') with version number instead of a SHA hash"
+                                )
+                            if passed:
+                                passed = False
+        else:
+            for step in self.action["steps"]:
                 if "uses" in step:
                     uses = step["uses"]
                     if search(analyzer.regex.ACTION_WITH_VERSION, uses):
@@ -86,18 +88,33 @@ class Analyzer:
 
     def _check_for_inline_script(self) -> bool:
         passed = True
-        for job in self.jobs.keys():
-            steps = self.jobs[job]["steps"]
-            for step in steps:
+        if self.has_jobs:
+            for job in self.jobs.keys():
+                steps = self.jobs[job]["steps"]
+                for step in steps:
+                    if "run" in step:
+                        if self.verbose:
+                            # NOTE: name is not required according to GitHub Docs: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#name
+                            if 'name' in step:
+                                print(
+                                    f"{Colors.LIGHT_GRAY}INFO{Colors.END} found inline script in job('{job}').step('{step['name']}')"
+                                )
+                            else:
+                                print(
+                                    f"{Colors.LIGHT_GRAY}INFO{Colors.END} found step with inline script in job('{job}')"
+                                )
+                        passed = False
+        else:
+            for step in self.action["steps"]:
                 if "run" in step:
                     if self.verbose:
                         # NOTE: name is not required according to GitHub Docs: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#name
                         if 'name' in step:
-                            print(
-                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} found inline script in job('{job}').step('{step['name']}')"
-                            )
+                            print(f"{Colors.LIGHT_GRAY}INFO{Colors.END} found inline script in step('{step['name']}')")
                         else:
-                            print(f"{Colors.LIGHT_GRAY}INFO{Colors.END} found step with inline script in job('{job}')")
+                            print(
+                                f"{Colors.LIGHT_GRAY}INFO{Colors.END} found step('{step['name']}') with inline script"
+                            )
                     passed = False
         return passed
 
@@ -427,21 +444,22 @@ class Analyzer:
             bool: True, if all checks passed, False, if any check fails.
         """
         self.action = action
-        self.jobs = self.action["jobs"]
+        self.has_jobs = "jobs" in self.action
+        if self.has_jobs:
+            self.jobs = self.action["jobs"]
 
         passed_all_checks = True
         fail_checks = []
-        if self._action_has_required_elements():
-            for check in self.checks:
-                if self.ignore_warnings:
-                    if self.checks[check]["level"] == "WARN":
-                        continue
-                if check[1:] in self.ignore_checks:
+        for check in self.checks:
+            if self.ignore_warnings:
+                if self.checks[check]["level"] == "WARN":
                     continue
-                if not Analyzer.__dict__[check](self):
-                    fail_checks.append(check)
-                    if passed_all_checks:
-                        passed_all_checks = False
-            for check in fail_checks:
-                self._print_failed_check_msg(check, self.checks[check]["level"])
+            if check[1:] in self.ignore_checks:
+                continue
+            if not Analyzer.__dict__[check](self):
+                fail_checks.append(check)
+                if passed_all_checks:
+                    passed_all_checks = False
+        for check in fail_checks:
+            self._print_failed_check_msg(check, self.checks[check]["level"])
         return passed_all_checks
